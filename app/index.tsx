@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import TabNavigation from './navigation/TabNavigation'
+import Login from './screens/Login';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
@@ -30,8 +31,11 @@ export default function HomeScreen() {
   });
 
   return (
+    // <View className='flex-1'>
+    //     <TabNavigation/>
+    // </View>
     <View className='flex-1'>
-        <TabNavigation/>
-    </View>
+      <Login/>
+  </View>
   );
 }
