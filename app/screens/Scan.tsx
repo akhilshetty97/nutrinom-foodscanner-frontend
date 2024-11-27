@@ -4,6 +4,7 @@ import {useCameraPermission, Camera, useCameraDevice, useCodeScanner} from "reac
 import { useIsFocused } from '@react-navigation/native';
 import axios from 'axios';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { BACKEND_URL } from '@env';
 
 
 const Scan = () => {
@@ -14,7 +15,6 @@ const Scan = () => {
   const [scannedCode, setScannedCode] = useState<string|null>(null);
   const scannerEnabled = useRef(true); 
   const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
-  const BASE_URL = 'https://world.openfoodfacts.net/api/v2/product';
 
   const codeScanner = useCodeScanner({
     codeTypes: ['ean-13', 'upc-a', 'itf'],
@@ -26,51 +26,16 @@ const Scan = () => {
         setScannedCode(firstCode);  // Store the first code value
         scannerEnabled.current = false; // Disable scanner after first scan
       }
-
-
-    //   {
-    //     "type": "ean-13",
-    //     "corners": [
-    //       {
-    //         "x": 1288.2368025756452,
-    //         "y": 460.1997247098826
-    //       },
-    //       {
-    //         "x": 1321.3947997069927,
-    //         "y": 460.19972389460514
-    //       },
-    //       {
-    //         "x": 1321.394788044979,
-    //         "y": 310.12710397959677
-    //       },
-    //       {
-    //         "x": 1288.2367909136312,
-    //         "y": 310.1271047948742
-    //       }
-    //     ],
-    //     "value": "0706502220235",
-    //     "frame": {
-    //       "x": 1288.2368087768555,
-    //       "height": 150.07261991500854,
-    //       "width": 33.157997131347656,
-    //       "y": 310.127112865448
-    //     }
-    //   }
-    // ]
     }
   })
-  // ${BASE_URL}/api/v2/product/${scannedCode}
-
+  
   // Call to the API
   useEffect(()=>{
     if (scannedCode) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`${BASE_URL}/${scannedCode}`,{
-            headers: {
-              'User-Agent': 'FooddScan/1.0 (mrshetty24.com)' 
-            }
-          });
+          console.log(`BACKENDURL: ${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
+          const response = await axios.get(`${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
           console.log(response);
           if (response.status === 200) {
             console.log(response.data);
