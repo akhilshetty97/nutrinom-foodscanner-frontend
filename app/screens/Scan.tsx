@@ -2,9 +2,11 @@ import { View, Text,SafeAreaView, Platform, StatusBar, Pressable, StyleSheet, To
 import React, { useState, useEffect, useRef } from 'react'
 import {useCameraPermission, Camera, useCameraDevice, useCodeScanner} from "react-native-vision-camera"
 import { useIsFocused } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { BACKEND_URL } from '@env';
+// import NutritionScreen from '../(modals)/nutrition-screen';
 
 
 const Scan = () => {
@@ -12,9 +14,11 @@ const Scan = () => {
   const { hasPermission, requestPermission } = useCameraPermission();
   const device = useCameraDevice('back');
   const isFocused = useIsFocused();
+  const router = useRouter(); 
   const [scannedCode, setScannedCode] = useState<string|null>(null);
   const scannerEnabled = useRef(true); 
   const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
+
 
   const codeScanner = useCodeScanner({
     codeTypes: ['ean-13', 'upc-a', 'itf'],
@@ -22,7 +26,7 @@ const Scan = () => {
       if (!scannerEnabled.current) return;
       const firstCode = codes[0]?.value;
       if (firstCode) {
-        console.log(firstCode);
+        // console.log(firstCode);
         setScannedCode(firstCode);  // Store the first code value
         scannerEnabled.current = false; // Disable scanner after first scan
       }
@@ -34,12 +38,20 @@ const Scan = () => {
     if (scannedCode) {
       const fetchData = async () => {
         try {
-          console.log(`BACKENDURL: ${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
+          // console.log(`BACKENDURL: ${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
           const response = await axios.get(`${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
-          console.log(response);
+          // console.log(response);
           if (response.status === 200) {
-            console.log(response.data);
+            // console.log(response.data);
             setFoodData(response.data);
+
+            // Navigate to NutritionScreen with the scanned food data
+            router.push({
+              pathname: '../(modals)/nutrition-screen',
+              params: { 
+                foodData: JSON.stringify(response.data) 
+              }
+            });
           } else {
             console.warn("Unexpected status code:", response.status);
           }
@@ -121,4 +133,3 @@ const styles = StyleSheet.create({
   });
 
 export default Scan
-

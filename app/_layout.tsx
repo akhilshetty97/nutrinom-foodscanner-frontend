@@ -14,6 +14,13 @@ export default function RootLayout() {
             headerShown: false 
           }} 
         />
+        <Stack.Screen 
+          name="(modals)/nutrition-screen" 
+          options={{ 
+            presentation: 'modal',
+            headerShown: false 
+          }} 
+        />
       </Stack>
     </ThemeProvider>
   );

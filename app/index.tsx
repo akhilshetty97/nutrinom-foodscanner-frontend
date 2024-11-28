@@ -31,11 +31,11 @@ export default function HomeScreen() {
   });
 
   return (
-    // <View className='flex-1'>
-    //     <TabNavigation/>
-    // </View>
     <View className='flex-1'>
-      <Login/>
-  </View>
+        <TabNavigation/>
+    </View>
+  //   <View className='flex-1'>
+  //     <Login/>
+  // </View>
   );
 }
