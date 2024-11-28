@@ -5,7 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-import { BACKEND_URL } from '@env';
+// import { BACKEND_URL } from '@env';
 // import NutritionScreen from '../(modals)/nutrition-screen';
 
 
@@ -18,6 +18,7 @@ const Scan = () => {
   const [scannedCode, setScannedCode] = useState<string|null>(null);
   const scannerEnabled = useRef(true); 
   const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
+  const BACKEND_URL = 'http://10.5.1.88:3000';
 
 
   const codeScanner = useCodeScanner({
@@ -33,18 +34,16 @@ const Scan = () => {
     }
   })
   
-  // Call to the API
-  useEffect(()=>{
+  useEffect(() => {
     if (scannedCode) {
       const fetchData = async () => {
         try {
-          // console.log(`BACKENDURL: ${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
+          console.log(`BACKENDURL: ${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
           const response = await axios.get(`${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
-          // console.log(response);
+          
           if (response.status === 200) {
-            // console.log(response.data);
             setFoodData(response.data);
-
+  
             // Navigate to NutritionScreen with the scanned food data
             router.push({
               pathname: '../(modals)/nutrition-screen',
@@ -54,19 +53,33 @@ const Scan = () => {
             });
           } else {
             console.warn("Unexpected status code:", response.status);
+            // Optionally add error handling for non-200 status
+            throw new Error(`Unexpected status code: ${response.status}`);
           }
-        }
-        catch (error){
+        } catch (error) {
+          // More comprehensive error handling
           if (axios.isAxiosError(error)) {
-            console.error('Axios error fetching data:', error.message);
+            console.error('Axios error details:', {
+              message: error.message,
+              code: error.code,
+              response: error.response?.data,
+              status: error.response?.status
+            });
           } else {
-            console.error('Error fetching data:', error);
+            console.error('Unexpected error:', error);
           }
-          }
-      }
-      fetchData();
+          
+          // Rethrow to ensure unhandled promise rejection is caught
+          throw error;
+        }
+      };
+  
+      // Wrap the async function call to catch any unhandled rejections
+      fetchData().catch(error => {
+        console.error('Unhandled promise rejection:', error);
+      });
     }
-  },[scannedCode]);
+  }, [scannedCode]);
 
   if (!device){
     return <View className='flex-1 bg-white flex items-center justify-center'><Text>Camera is unavailable</Text></View>
