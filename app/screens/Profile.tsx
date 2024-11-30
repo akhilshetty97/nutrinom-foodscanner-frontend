@@ -1,21 +1,29 @@
-import { View, Text,SafeAreaView, Platform, StatusBar } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { AuthContext } from '../contexts/AuthContext';
 
-const Profile = () => {
+const ProfileScreen = () => {
+  const { logout } = useContext(AuthContext);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Optional: Any additional navigation or UI updates after logout
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   return (
-    <SafeAreaView 
-    style={{
-      flex: 1,
-      backgroundColor:'white',
-      display:'flex',
-      alignItems:'center',
-      justifyContent:'center',
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
-    }}
-  >
-    <Text>Profile</Text>
-  </SafeAreaView>
-  )
-}
+    <View className='flex-1 items-center justify-center'>
+      <TouchableOpacity 
+        onPress={handleLogout}
+        className='bg-red-500 px-6 py-3 rounded-lg'
+      >
+        <Text className='text-white font-bold'>Log Out</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-export default Profile
+export default ProfileScreen;

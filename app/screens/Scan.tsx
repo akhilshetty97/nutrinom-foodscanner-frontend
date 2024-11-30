@@ -18,7 +18,7 @@ const Scan = () => {
   const [scannedCode, setScannedCode] = useState<string|null>(null);
   const scannerEnabled = useRef(true); 
   const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
-  const BACKEND_URL = 'http://10.5.1.88:3000';
+  const BACKEND_URL = 'http://10.5.1.152:3000';
 
 
   const codeScanner = useCodeScanner({

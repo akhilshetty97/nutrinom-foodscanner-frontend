@@ -1,10 +1,13 @@
 import { View, Text, StyleSheet, useColorScheme } from 'react-native';
 import TabNavigation from './navigation/TabNavigation'
 import Login from './screens/Login';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../app/contexts/AuthContext.js';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
+  const { isAuthenticated, loading, user } = useContext(AuthContext);
 
   const styles = StyleSheet.create({
     container: {
@@ -30,12 +33,26 @@ export default function HomeScreen() {
     },
   });
 
+  useEffect(() => {
+    console.log('Authentication State:', {
+      isAuthenticated,
+      loading,
+      user: user ? 'User exists' : 'No user'
+    });
+  }, [isAuthenticated, loading, user]);
+
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <View className='flex-1'>
-        <TabNavigation/>
+        {isAuthenticated ? <TabNavigation/> : <Login/>}
     </View>
-  //   <View className='flex-1'>
-  //     <Login/>
-  // </View>
   );
 }
