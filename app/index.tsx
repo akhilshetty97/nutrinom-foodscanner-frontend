@@ -33,6 +33,7 @@ export default function HomeScreen() {
     },
   });
 
+  // Remove later
   useEffect(() => {
     console.log('Authentication State:', {
       isAuthenticated,

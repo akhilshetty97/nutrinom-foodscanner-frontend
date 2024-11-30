@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, useContext} from 'react';
+import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import History from '../screens/History';
 import Scan from '../screens/Scan';
@@ -6,11 +7,19 @@ import Profile from '../screens/Profile';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {AuthContext} from '../contexts/AuthContext.js';
 
 const Tab = createBottomTabNavigator();
 
 export class TabNavigation extends Component {
+   // Set the context type for the class component
+   static contextType = AuthContext;
+
     render() {
+    // Access context through this.context
+    const user = this.context.user;
+    console.log('USER');
+    console.log(user);
       return (
           <Tab.Navigator   
           screenOptions={{
@@ -39,12 +48,27 @@ export class TabNavigation extends Component {
                         focused?<FontAwesome name="list-ul" size={20} color="black" />:<Feather name="list" size={24} color="black" />  
         )}}
               />
-              <Tab.Screen name="Profile" component={Profile} 
-                    options={{
-                    tabBarIcon: ({color, size, focused}) => (
-                        focused?<FontAwesome name="user" size={22} color="black" />:<FontAwesome name="user-o" size={20} color="black" />  
-        )}}
-              />
+              <Tab.Screen
+                  name="Profile"
+                  component={Profile}
+                  options={{
+                    tabBarIcon: ({ color, size, focused }) =>
+                      user?.profile_img ? (
+                        <Image
+                          source={{ uri: user.profile_img }}
+                          style={{
+                            width: 28, 
+                            height: 28,
+                            borderRadius: 12, 
+                          }}
+                        />
+                      ) : focused ? (
+                        <FontAwesome name="user" size={22} color="black" />
+                      ) : (
+                        <FontAwesome name="user-o" size={20} color="black" />
+                      ),
+                  }}
+                />
           </Tab.Navigator>
       )
     }
