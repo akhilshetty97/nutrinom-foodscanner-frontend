@@ -18,8 +18,6 @@ export class TabNavigation extends Component {
     render() {
     // Access context through this.context
     const user = this.context.user;
-    console.log('USER');
-    console.log(user);
       return (
           <Tab.Navigator   
           screenOptions={{

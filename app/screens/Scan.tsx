@@ -42,7 +42,6 @@ const Scan = () => {
       if (!scannerEnabled.current) return;
       const firstCode = codes[0]?.value;
       if (firstCode) {
-        // console.log(firstCode);
         setScannedCode(firstCode);  // Store the first code value
         scannerEnabled.current = false; // Disable scanner after first scan
       }

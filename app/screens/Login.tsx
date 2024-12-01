@@ -26,15 +26,12 @@ const Login = () => {
             token: accessToken,
           });
   
-          console.log("Backend response:", res.data);
-  
           const user = res.data.data.user;
           const token = res.data.data.token;
   
           // Use the login method from context
           await login(user, token);
-  
-          console.log('Authentication completed successfully');
+          
         } catch (error) {
           console.error('Login Error:', error);
           setIsAuthenticated(false);
