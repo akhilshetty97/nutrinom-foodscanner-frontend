@@ -68,7 +68,8 @@ const NutritionScreen: React.FC = () => {
       {product.serving_size && <Text style={styles.servingSize}>Serving Size: {product.serving_size}</Text>}
       {product.categories && <Text style={styles.categories}>Categories: {product.categories}</Text>}
 
-      <View style={styles.nutritionSection}>
+      
+      {product.nutriscore_grade !== "not-applicable" && (<View style={styles.nutritionSection}>
         <Text style={styles.sectionTitle}>Nutritional Information</Text>
         {product.nutriments?.energy_kcal !== undefined && <Text>Calories: {product.nutriments.energy_kcal} kcal</Text>}
         {product.nutriments?.carbohydrates !== undefined && <Text>Carbohydrates: {product.nutriments.carbohydrates} g</Text>}
@@ -78,7 +79,7 @@ const NutritionScreen: React.FC = () => {
         {product.nutriments?.proteins !== undefined && <Text>Proteins: {product.nutriments.proteins} g</Text>}
         {product.nutriments?.salt !== undefined && <Text>Salt: {product.nutriments.salt} g</Text>}
         {product.nutriments?.fiber !== undefined && <Text>Fiber: {product.nutriments.fiber} g</Text>}
-      </View>
+      </View> )}
 
       {product.allergens && (
         <View style={styles.allergensSection}>
