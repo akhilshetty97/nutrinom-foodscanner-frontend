@@ -32,12 +32,21 @@ interface FoodData {
 }
 
 const NutritionScreen: React.FC = () => {
-  const { foodData, clearScannedItem } = useContext(ScanContext);
+  const { foodData, clearScannedItem, isLoading} = useContext(ScanContext);
   const router = useRouter();
   const params = useLocalSearchParams();
 
   // Check for error from previous screen
   const errorMessage = params.error as string | undefined;
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.loadingText}>Loading product information...</Text>
+      </View>
+    );
+  }
 
   // If there's an error, render error view
   if (errorMessage || !foodData || !foodData.product) {
