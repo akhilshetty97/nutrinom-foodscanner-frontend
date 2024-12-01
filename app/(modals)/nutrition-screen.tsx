@@ -1,6 +1,7 @@
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
-import React, { useMemo } from 'react';
-import { useLocalSearchParams } from 'expo-router';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useMemo, useContext } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { ScanContext } from '../contexts/ScanContext';
 
 interface FoodData {
   product: {
@@ -31,22 +32,27 @@ interface FoodData {
 }
 
 const NutritionScreen: React.FC = () => {
+  const { foodData, clearScannedItem } = useContext(ScanContext);
+  const router = useRouter();
   const params = useLocalSearchParams();
 
-  const foodData: FoodData = useMemo(() => {
-    try {
-      // Parse the stringified data
-      return params.foodData ? JSON.parse(params.foodData as string) : null;
-    } catch (error) {
-      console.error('Error parsing food data', error);
-      return null;
-    }
-  }, [params.foodData]);
+  // Check for error from previous screen
+  const errorMessage = params.error as string | undefined;
 
-  if (!foodData || !foodData.product) {
+  // If there's an error, render error view
+  if (errorMessage || !foodData || !foodData.product) {
     return (
       <View style={styles.container}>
-        <Text>Loading...</Text>
+        <Text style={styles.loadingText}>No product information available</Text>
+        <TouchableOpacity 
+          style={styles.retryButton}
+          onPress={() => {
+            clearScannedItem();
+            router.back();
+          }}
+        >
+          <Text style={styles.retryButtonText}>Go Back</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -148,6 +154,44 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  errorTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: 'red',
+  },
+  errorMessage: {
+    fontSize: 18,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  scannedCodeText: {
+    fontSize: 14,
+    color: 'gray',
+    marginBottom: 16,
+  },
+  retryButton: {
+    backgroundColor: '#007bff',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loadingText: {
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 

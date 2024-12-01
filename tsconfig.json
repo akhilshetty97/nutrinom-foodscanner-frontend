@@ -14,5 +14,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "components/HighlightBox.jsx", "app/contexts/AuthContext.js"  ]
+, "components/HighlightBox.jsx", "app/contexts/AuthContext.js", "app/navigation/TabNavigation.js"  ]
 }

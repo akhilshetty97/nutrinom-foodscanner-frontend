@@ -23,6 +23,18 @@ const Scan = () => {
   const { scannedCode, setScannedCode,foodData,setFoodData, saveScannedItem, clearScannedItem } = useContext(ScanContext);
   const BACKEND_URL = 'http://10.5.1.88:3000';
 
+  // Method Reset the scanner
+  const resetScanner = () => {
+    scannerEnabled.current = true;
+    setScannedCode(null);
+  };
+
+  // Listen for focus changes to reset scanner(eg when modal is pushed down)
+  useEffect(() => {
+    if (isFocused) {
+      resetScanner();
+    }
+  }, [isFocused]);
 
   const codeScanner = useCodeScanner({
     codeTypes: ['ean-13', 'upc-a', 'itf'],
@@ -61,25 +73,48 @@ const Scan = () => {
         } catch (error) {
           // More comprehensive error handling
           if (axios.isAxiosError(error)) {
-            console.error('Axios error details:', {
-              message: error.message,
-              code: error.code,
-              response: error.response?.data,
-              status: error.response?.status
-            });
+            // Check for specific error scenarios
+            if (error.response?.status === 404) {
+              // Product not found in database
+              router.push({
+                pathname: '../(modals)/nutrition-screen',
+                params: { 
+                  error: 'Product not found',
+                  scannedCode: scannedCode 
+                }
+              });
+            } else if (error.response?.status === 500) {
+              // Server error
+              router.push({
+                pathname: '../(modals)/nutrition-screen',
+                params: { 
+                  error: 'Server error. Please try again later.',
+                  scannedCode: scannedCode 
+                }
+              });
+            } else {
+              // Generic network or request error
+              router.push({
+                pathname: '../(modals)/nutrition-screen',
+                params: { 
+                  error: 'Unable to fetch product information',
+                  scannedCode: scannedCode 
+                }
+              });
+            }
           } else {
-            console.error('Unexpected error:', error);
+            // Non-Axios error
+          router.push({
+            pathname: '../(modals)/nutrition-screen',
+            params: { 
+              error: 'An unexpected error occurred',
+              scannedCode: scannedCode 
+            }
+          });
           }
-          
-          // Rethrow to ensure unhandled promise rejection is caught
-          throw error;
         }
       };
-  
-      // Wrap the async function call to catch any unhandled rejections
-      fetchData().catch(error => {
-        console.error('Unhandled promise rejection:', error);
-      });
+      fetchData()
     }
   }, [scannedCode]);
 
