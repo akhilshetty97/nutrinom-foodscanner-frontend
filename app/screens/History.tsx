@@ -1,8 +1,38 @@
 import { View, Text, SafeAreaView, ScrollView, Platform, StatusBar } from 'react-native'
-import React from 'react'
-import HistoryList from '../../components/HistoryList'
+import React,{useState, useEffect, useContext} from 'react'
+import HistoryList from '../../components/HistoryList';
+import { AuthContext } from '../contexts/AuthContext.js';
+import axios from 'axios';
 
 const History = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [productList, setProductList] = useState();
+  const { user } = useContext(AuthContext);
+  const BACKEND_URL = 'http://10.5.1.88:3000';
+
+  useEffect(()=>{
+
+    const fetchProductList = async () => {
+      try {
+        setIsLoading(true);
+        console.log('User', user);
+        const response = await axios.get(`${BACKEND_URL}/product/history/${user.id}`);
+
+        if (response.data.scannedProducts) {
+          setProductList(response.data.scannedProducts);
+          console.log(productList);
+        }
+      } catch(error) {
+        console.error('Error fetching product history:', error);
+      } finally {
+        setIsLoading(false);
+      }
+
+    }
+    if (user && user.id) {
+      fetchProductList();
+    }
+  },[user]);
   return (
     <SafeAreaView 
       style={{
@@ -21,20 +51,30 @@ const History = () => {
         <Text style={{ fontSize: 24, fontWeight: 'bold' }}>History</Text>
       </View>
 
-      {/* Content Section (List of History) */}
-      <ScrollView 
-        contentContainerStyle={{ 
-          paddingVertical: 20,  // Add vertical padding
-          paddingHorizontal: 10 // Add horizontal padding
-        }}
-        showsVerticalScrollIndicator={true} // Show scroll indicator
-      >
-        <HistoryList />
-        <HistoryList />
-        <HistoryList />
-        <HistoryList />
-        <HistoryList />
-      </ScrollView>
+      {
+        isLoading ? (
+          <View>
+            <Text>Fetching data...</Text> 
+          </View>
+        ) : (      
+          /* Content Section (List of History) */
+          <ScrollView 
+            contentContainerStyle={{ 
+              paddingVertical: 20,  
+              paddingHorizontal: 10 
+            }}
+            showsVerticalScrollIndicator={true}
+          >
+            <HistoryList />
+            <HistoryList />
+            <HistoryList />
+            <HistoryList />
+            <HistoryList />
+          </ScrollView>
+        )
+      }
+
+
     </SafeAreaView>
   )
 }
