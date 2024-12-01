@@ -38,7 +38,7 @@ export default function HomeScreen() {
     console.log('Authentication State:', {
       isAuthenticated,
       loading,
-      user: user ? 'User exists' : 'No user'
+      user: user ? user : 'No user'
     });
   }, [isAuthenticated, loading, user]);
 

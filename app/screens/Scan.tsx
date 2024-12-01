@@ -1,10 +1,12 @@
 import { View, Text,SafeAreaView, Platform, StatusBar, Pressable, StyleSheet, TouchableOpacity } from 'react-native'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import {useCameraPermission, Camera, useCameraDevice, useCodeScanner} from "react-native-vision-camera"
 import { useIsFocused } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import { ScanContext } from '../contexts/ScanContext.js';
+
 // import { BACKEND_URL } from '@env';
 // import NutritionScreen from '../(modals)/nutrition-screen';
 
@@ -15,9 +17,10 @@ const Scan = () => {
   const device = useCameraDevice('back');
   const isFocused = useIsFocused();
   const router = useRouter(); 
-  const [scannedCode, setScannedCode] = useState<string|null>(null);
+  // const [scannedCode, setScannedCode] = useState<string|null>(null);
   const scannerEnabled = useRef(true); 
-  const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
+  // const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
+  const { scannedCode, setScannedCode,foodData,setFoodData, saveScannedItem, clearScannedItem } = useContext(ScanContext);
   const BACKEND_URL = 'http://10.5.1.88:3000';
 
 
@@ -41,7 +44,7 @@ const Scan = () => {
           const response = await axios.get(`${BACKEND_URL}/api/call?scannedCode=${scannedCode}`);
           
           if (response.status === 200) {
-            setFoodData(response.data);
+            saveScannedItem(scannedCode, response.data);
   
             // Navigate to NutritionScreen with the scanned food data
             router.push({

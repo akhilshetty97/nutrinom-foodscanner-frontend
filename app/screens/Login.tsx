@@ -34,13 +34,6 @@ const Login = () => {
           // Use the login method from context
           await login(user, token);
   
-          // Explicitly set authentication state
-          setIsAuthenticated(true);
-  
-          // Ensure AsyncStorage operations are awaited
-          await AsyncStorage.setItem('user', JSON.stringify(user));
-          await AsyncStorage.setItem('token', token);
-  
           console.log('Authentication completed successfully');
         } catch (error) {
           console.error('Login Error:', error);
@@ -49,7 +42,9 @@ const Login = () => {
       }
     };
   
-    handleSignIn();
+    if (response) {
+      handleSignIn();
+    }
   }, [response]);
 
   return (

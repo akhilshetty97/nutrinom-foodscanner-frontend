@@ -21,7 +21,21 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(true);
         }
       } catch (error) {
-        console.error('Error loading user:', error);
+        console.error('Critical Error loading user:', error);
+        
+        // More comprehensive error logging
+        if (error instanceof Error) {
+          console.error('Error Name:', error.name);
+          console.error('Error Message:', error.message);
+          console.error('Error Stack:', error.stack);
+        }
+
+        // Attempt to clear and reinitialize storage
+        try {
+          await AsyncStorage.clear();
+        } catch (clearError) {
+          console.error('Failed to clear AsyncStorage:', clearError);
+        }
       } finally {
         setLoading(false);
       }
