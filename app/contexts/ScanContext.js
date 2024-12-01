@@ -64,8 +64,6 @@ export const ScanProvider = ({ children }) => {
                 // Ensure loading state is reset
                 setIsLoading(false);
             }
-
-
   };
 
   const clearScannedItem = () => {

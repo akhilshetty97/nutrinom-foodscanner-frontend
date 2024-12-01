@@ -56,20 +56,7 @@ const History = () => {
             <Text>Fetching data...</Text> 
           </View>
         ) : (      
-          /* Content Section (List of History) */
-          <ScrollView 
-            contentContainerStyle={{ 
-              paddingVertical: 20,  
-              paddingHorizontal: 10 
-            }}
-            showsVerticalScrollIndicator={true}
-          >
-            <HistoryList />
-            <HistoryList />
-            <HistoryList />
-            <HistoryList />
-            <HistoryList />
-          </ScrollView>
+            <HistoryList productList={productList}/>
         )
       }
 
