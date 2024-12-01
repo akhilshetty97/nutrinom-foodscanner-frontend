@@ -20,7 +20,6 @@ const History = () => {
 
         if (response.data.scannedProducts) {
           setProductList(response.data.scannedProducts);
-          console.log(productList);
         }
       } catch(error) {
         console.error('Error fetching product history:', error);
