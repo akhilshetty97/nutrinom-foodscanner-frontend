@@ -12,7 +12,7 @@ export const ScanProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
   const BACKEND_URL = 'http://10.5.1.152:3000';
 
-  const saveScannedItem =  async (code, data) => {
+  const saveScannedItem =  async (code, data, skipApiCall = false) => {
         // Reset previous error and set loading
         setError(null);
         setIsLoading(true);
@@ -39,15 +39,18 @@ export const ScanProvider = ({ children }) => {
         // If user is logged in, you can also save to backend/database here
         // Optional: API call to save scan history for the user
         try {
-            const response = await axios.post(`${BACKEND_URL}/product/add`, {
-            userId: user.id,
-            barcode: code,
-            foodData: data
-            });
+            // Only make API call if not skipped
+            if (!skipApiCall) {
+              await axios.post(`${BACKEND_URL}/product/add`, {
+                userId: user.id,
+                barcode: code,
+                foodData: data
+              });
+            }
 
             setScannedCode(code);
             setFoodData(data);
-
+            
             } catch (error) {
             const errorMessage = error.response?.data?.error || 'Failed to save scan history';
             setError({

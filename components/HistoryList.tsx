@@ -18,8 +18,8 @@ interface HistoryListProps {
 const BACKEND_URL = 'http://10.5.1.152:3000';
 
 const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
-  const { foodData, setFoodData } = useContext(ScanContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const { foodData, setFoodData, saveScannedItem, isLoading } = useContext(ScanContext);
+  const [historyLoading, setIsHistoryLoading] = useState(false);
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const router = useRouter(); 
 
@@ -27,22 +27,16 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   const handleProductPress = async (productId: number) => {
     try {
       // Show loading indicator for the specific product
-      setIsLoading(true);
-      setLoadingProductId(productId);
+      setIsHistoryLoading(true);
       
       // Fetch data for that particular product id
       const response = await axios.get(`${BACKEND_URL}/product/${productId}`);
       const productInfo = response.data.productInfo;
-      setFoodData(productInfo);    
-      // Navigate to nutrition screen
-      router.push('/(modals)/nutrition-screen');
+      await saveScannedItem(productInfo._id,productInfo, true);
 
     } catch (error) {
       console.error('Error fetching product details:', error);
-      // Optional: Add error handling, like showing an alert
     } finally {
-      setIsLoading(false);
-      setLoadingProductId(null);
     }
   };
 
@@ -52,7 +46,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
       <TouchableOpacity 
         style={styles.touchableItem}
         onPress={() => handleProductPress(item.productId)}
-        disabled={isLoading && loadingProductId === item.productId}
+        disabled = {historyLoading}
       >
         <Image 
           source={{ uri: item.productImage }}
@@ -68,11 +62,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
             {item.productName}
           </Text>
         </View>
-        {isLoading && loadingProductId === item.productId ? (
-          <ActivityIndicator size="small" color="#000" />
-        ) : (
-          <MaterialIcons name="navigate-next" size={24} color="black" />
-        )}
+        <MaterialIcons name="navigate-next" size={24} color="black" />
       </TouchableOpacity>
     </View>
   );
