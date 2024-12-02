@@ -20,7 +20,6 @@ const Login = () => {
       if (response?.type === 'success') {
         try {
           const accessToken = response?.authentication?.accessToken;
-          console.log('Access Token:', accessToken);
   
           const res = await axios.post(`${BACKEND_URL}/auth`, {
             token: accessToken,

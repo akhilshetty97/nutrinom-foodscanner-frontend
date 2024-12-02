@@ -71,8 +71,6 @@ export const AuthProvider = ({ children }) => {
       // Remove items from AsyncStorage
       await AsyncStorage.removeItem('user');
       await AsyncStorage.removeItem('token');
-      
-      console.log('User logged out successfully');
     } catch (error) {
       console.error('Logout error in context:', error);
     }
