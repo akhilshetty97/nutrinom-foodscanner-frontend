@@ -6,7 +6,7 @@ import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext.js';
 
 const IOS_CLIENT_ID = '145316921728-rh0ttpefq7r5ot5ou62ue2ivrpbhg0ma.apps.googleusercontent.com';
-const BACKEND_URL = 'http://10.5.1.88:3000';
+const BACKEND_URL = 'http://10.5.1.152:3000';
 
 const Login = () => {
   const { login, setUserInfo, setToken, setIsAuthenticated } = useContext(AuthContext);

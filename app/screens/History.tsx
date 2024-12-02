@@ -1,37 +1,49 @@
 import { View, Text, SafeAreaView, ScrollView, Platform, StatusBar } from 'react-native'
-import React,{useState, useEffect, useContext} from 'react'
+import React,{useState, useEffect, useContext, useCallback} from 'react'
 import HistoryList from '../../components/HistoryList';
 import { AuthContext } from '../contexts/AuthContext.js';
+import { useFocusEffect } from '@react-navigation/native'
 import axios from 'axios';
 
 const History = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [productList, setProductList] = useState();
   const { user } = useContext(AuthContext);
-  const BACKEND_URL = 'http://10.5.1.88:3000';
+  const BACKEND_URL = 'http://10.5.1.152:3000';
 
-  useEffect(()=>{
+  // Function to fetch product list
+  const fetchProductList = async () => {
+    try {
+      setIsLoading(true);
+      console.log('User', user);
+      const response = await axios.get(`${BACKEND_URL}/product/history/${user.id}`);
 
-    const fetchProductList = async () => {
-      try {
-        setIsLoading(true);
-        console.log('User', user);
-        const response = await axios.get(`${BACKEND_URL}/product/history/${user.id}`);
-
-        if (response.data.scannedProducts) {
-          setProductList(response.data.scannedProducts);
-        }
-      } catch(error) {
-        console.error('Error fetching product history:', error);
-      } finally {
-        setIsLoading(false);
+      if (response.data.scannedProducts) {
+        setProductList(response.data.scannedProducts);
       }
-
+    } catch(error) {
+      console.error('Error fetching product history:', error);
+    } finally {
+      setIsLoading(false);
     }
+  }
+
+  // Use focus effect to refetch when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (user && user.id) {
+        fetchProductList();
+      }
+    }, [user])
+  );
+
+  // Original useEffect remains as a fallback
+  useEffect(() => {
     if (user && user.id) {
       fetchProductList();
     }
-  },[user]);
+  }, [user]);
+
   return (
     <SafeAreaView 
       style={{

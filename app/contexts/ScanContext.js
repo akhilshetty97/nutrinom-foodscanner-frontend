@@ -10,7 +10,7 @@ export const ScanProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { user } = useContext(AuthContext);
-  const BACKEND_URL = 'http://10.5.1.88:3000';
+  const BACKEND_URL = 'http://10.5.1.152:3000';
 
   const saveScannedItem =  async (code, data) => {
         // Reset previous error and set loading
@@ -48,8 +48,6 @@ export const ScanProvider = ({ children }) => {
             setScannedCode(code);
             setFoodData(data);
 
-            // Log successful scan
-            console.log('Product created successfully', response.data);
             } catch (error) {
             const errorMessage = error.response?.data?.error || 'Failed to save scan history';
             setError({
@@ -78,10 +76,12 @@ export const ScanProvider = ({ children }) => {
       setScannedCode,
       foodData, 
       setFoodData,
-      saveScannedItem, 
-      clearScannedItem,
       isLoading,
-      error
+      setIsLoading,
+      error,
+      setError,
+      saveScannedItem,
+      clearScannedItem
     }}>
       {children}
     </ScanContext.Provider>

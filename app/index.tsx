@@ -33,16 +33,6 @@ export default function HomeScreen() {
     },
   });
 
-  // Remove later
-  useEffect(() => {
-    console.log('Authentication State:', {
-      isAuthenticated,
-      loading,
-      user: user ? user : 'No user'
-    });
-  }, [isAuthenticated, loading, user]);
-
-
   if (loading) {
     return (
       <View style={styles.container}>

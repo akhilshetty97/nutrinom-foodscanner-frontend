@@ -1,6 +1,9 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useState,useContext, useEffect } from 'react'
+import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+import { ScanContext } from '../app/contexts/ScanContext.js';
 
 // Define the type for props
 interface HistoryListProps {
@@ -12,11 +15,45 @@ interface HistoryListProps {
   }[];
 }
 
+const BACKEND_URL = 'http://10.5.1.152:3000';
+
 const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
+  const { foodData, setFoodData } = useContext(ScanContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
+  const router = useRouter(); 
+
+  // Function to handle product details fetch
+  const handleProductPress = async (productId: number) => {
+    try {
+      // Show loading indicator for the specific product
+      setIsLoading(true);
+      setLoadingProductId(productId);
+      
+      // Fetch data for that particular product id
+      const response = await axios.get(`${BACKEND_URL}/product/${productId}`);
+      const productInfo = response.data.productInfo;
+      setFoodData(productInfo);    
+      // Navigate to nutrition screen
+      router.push('/(modals)/nutrition-screen');
+
+    } catch (error) {
+      console.error('Error fetching product details:', error);
+      // Optional: Add error handling, like showing an alert
+    } finally {
+      setIsLoading(false);
+      setLoadingProductId(null);
+    }
+  };
+
   // Render individual product item
-  const renderProductItem = (item: NonNullable<HistoryListProps['productList']>[0]) => (
-    <View key={item.scanId} style={styles.itemContainer}>
-      <TouchableOpacity style={styles.touchableItem}>
+  const renderProductItem = ({ item }: { item: NonNullable<HistoryListProps['productList']>[0] }) => (
+    <View style={styles.itemContainer}>
+      <TouchableOpacity 
+        style={styles.touchableItem}
+        onPress={() => handleProductPress(item.productId)}
+        disabled={isLoading && loadingProductId === item.productId}
+      >
         <Image 
           source={{ uri: item.productImage }}
           style={styles.productImage}
@@ -31,7 +68,11 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
             {item.productName}
           </Text>
         </View>
-        <MaterialIcons name="navigate-next" size={24} color="black" />
+        {isLoading && loadingProductId === item.productId ? (
+          <ActivityIndicator size="small" color="#000" />
+        ) : (
+          <MaterialIcons name="navigate-next" size={24} color="black" />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -51,9 +92,12 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
         <Text style={styles.headerText}>Scan History</Text>
         <Text style={styles.countText}>({productList.length} items)</Text>
       </View>
-      <View style={styles.listContainer}>
-        {productList.map(renderProductItem)}
-      </View>
+      <FlatList
+        data={productList}
+        renderItem={renderProductItem}
+        keyExtractor={(item) => item.scanId.toString()}
+        showsVerticalScrollIndicator={false}
+      />
     </View>
   )
 }
@@ -63,6 +107,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     marginBottom: 15,
+    marginTop:10
   },
   headerContainer: {
     flexDirection: 'row',
@@ -79,7 +124,6 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   listContainer: {
-    // This ensures the list is static and doesn't scroll
     width: '100%',
   },
   itemContainer: {
