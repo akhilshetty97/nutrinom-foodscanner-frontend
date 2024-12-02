@@ -121,15 +121,15 @@ const ProfileScreen = () => {
 
         {/* Thank You Note */}
         <View style={styles.thankYouContainer}>
-        <Text style={styles.thankYouTitle}>
+          <Text style={styles.thankYouTitle}>
           Thank You, {user.given_name},
-        </Text>
-        <Text style={styles.thankYouTitle}>
-          for Trying My App!
-        </Text>
+          </Text>
+          <Text style={styles.thankYouTitle}>
+            for Exploring My App!
+          </Text>
           <Text style={styles.thankYouText}>
-            I'm incredibly grateful for your support and hope you're enjoying the experience. 
-            Your feedback and enthusiasm mean the world to us.
+            I built this app as a personal project, and your use of it makes it all worthwhile. I'm passionate about 
+            continuously improving it, and your feedback would mean so much to me. Stay Tuned for exciting new features!
           </Text>
 
           {/* Social Links */}
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     height: 300, 
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginBottom:-15
   },
   quoteText: {
     fontSize: 14,
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   thankYouContainer: {
     alignItems: 'center',
     paddingHorizontal: 20,
+    marginBottom:25
   },
   thankYouTitle: {
     fontSize: 20,
@@ -211,18 +212,26 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   socialLink: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff', 
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderRadius: 5,
-    display:'flex',
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'center',
-    gap:10
+    borderRadius: 10, 
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1, 
+    shadowRadius: 4,
+    elevation: 3, 
+    borderWidth: 1, 
+    borderColor: '#e0e0e0',
+
   },
   socialLinkText: {
-    color: '#333',
+    color: 'black',
     fontWeight: '600',
   },
 });
