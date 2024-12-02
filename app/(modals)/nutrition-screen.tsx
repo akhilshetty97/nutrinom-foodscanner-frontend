@@ -70,41 +70,60 @@ const NutritionScreen: React.FC = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {product.image_front_small_url && <Image source={{ uri: product.image_front_small_url }} style={styles.image} />}
-      <Text style={styles.title}>{product.product_name}</Text>
-      {product.brands && <Text style={styles.brand}>Brand: {product.brands}</Text>}
-      {product.quantity && <Text style={styles.quantity}>Quantity: {product.quantity}</Text>}
-      {product.serving_size && <Text style={styles.servingSize}>Serving Size: {product.serving_size}</Text>}
-      {product.categories && <Text style={styles.categories}>Categories: {product.categories}</Text>}
+      {/* Top Section with Product Details */}
+      <View style={styles.topSection}>
+        {product.image_front_small_url && <Image source={{ uri: product.image_front_small_url }} style={styles.image} resizeMode="contain"/>}
+        <View style={styles.productDetailsContainer}>
+          <Text style={styles.title}>{product.product_name}</Text>
+          {product.brands && (
+            <View style={styles.detailHighlight}>
+              <Text style={styles.detailHighlightLabel}>Brand</Text>
+              <Text style={styles.detailHighlightText}>{product.brands}</Text>
+            </View>
+          )}
+          {product.quantity && (
+            <View style={styles.detailHighlight}>
+              <Text style={styles.detailHighlightLabel}>Quantity</Text>
+              <Text style={styles.detailHighlightText}>{product.quantity}</Text>
+            </View>
+          )}
+          {product.serving_size && <Text style={styles.detailText}>Serving Size: {product.serving_size}</Text>}
+        </View>
+      </View>
 
-      
-      {product.nutriscore_grade !== "not-applicable" && (<View style={styles.nutritionSection}>
-        <Text style={styles.sectionTitle}>Nutritional Information</Text>
-        {product.nutriments?.energy_kcal !== undefined && <Text>Calories: {product.nutriments.energy_kcal} kcal</Text>}
-        {product.nutriments?.carbohydrates !== undefined && <Text>Carbohydrates: {product.nutriments.carbohydrates} g</Text>}
-        {product.nutriments?.sugars !== undefined && <Text>Sugars: {product.nutriments.sugars} g</Text>}
-        {product.nutriments?.fat !== undefined && <Text>Fat: {product.nutriments.fat} g</Text>}
-        {product.nutriments?.saturated_fat !== undefined && <Text>Saturated Fat: {product.nutriments.saturated_fat} g</Text>}
-        {product.nutriments?.proteins !== undefined && <Text>Proteins: {product.nutriments.proteins} g</Text>}
-        {product.nutriments?.salt !== undefined && <Text>Salt: {product.nutriments.salt} g</Text>}
-        {product.nutriments?.fiber !== undefined && <Text>Fiber: {product.nutriments.fiber} g</Text>}
-      </View> )}
+      {/* Nutritional Information Section */}
+      {product.nutriscore_grade !== "not-applicable" && (
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Nutritional Information</Text>
+          {product.nutriments?.energy_kcal !== undefined && <Text>Calories: {product.nutriments.energy_kcal} kcal</Text>}
+          {product.nutriments?.carbohydrates !== undefined && <Text>Carbohydrates: {product.nutriments.carbohydrates} g</Text>}
+          {product.nutriments?.sugars !== undefined && <Text>Sugars: {product.nutriments.sugars} g</Text>}
+          {product.nutriments?.fat !== undefined && <Text>Fat: {product.nutriments.fat} g</Text>}
+          {product.nutriments?.saturated_fat !== undefined && <Text>Saturated Fat: {product.nutriments.saturated_fat} g</Text>}
+          {product.nutriments?.proteins !== undefined && <Text>Proteins: {product.nutriments.proteins} g</Text>}
+          {product.nutriments?.salt !== undefined && <Text>Salt: {product.nutriments.salt} g</Text>}
+          {product.nutriments?.fiber !== undefined && <Text>Fiber: {product.nutriments.fiber} g</Text>}
+        </View>
+      )}
 
+      {/* Allergens Section */}
       {product.allergens && (
-        <View style={styles.allergensSection}>
+        <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Allergens</Text>
           <Text>{product.allergens}</Text>
         </View>
       )}
 
+      {/* Ingredients Section */}
       {product.ingredients_text && (
-        <View style={styles.ingredientsSection}>
+        <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Ingredients</Text>
           <Text>{product.ingredients_text}</Text>
         </View>
       )}
 
-      <View style={styles.additionalInfoSection}>
+      {/* Additional Information Section */}
+      <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Additional Information</Text>
         {product.nutriscore_grade && <Text>Nutri-Score: {product.nutriscore_grade}</Text>}
         {product.ecoscore_grade && <Text>Eco-Score: {product.ecoscore_grade}</Text>}
@@ -122,77 +141,50 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
   },
-  image: {
-    width: '100%',
-    height: 200,
+  topSection: {
+    flexDirection: 'row',
     marginBottom: 16,
+    alignItems: 'center',
+  },
+  image: {
+    width: 160,
+    height: 250,
+    marginRight: 16,
+    borderRadius: 8,
+  },
+  productDetailsContainer: {
+    flex: 1,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 8,
   },
-  brand: {
-    fontSize: 18,
-    marginBottom: 8,
+  detailText: {
+    fontSize: 16,
+    marginBottom: 4,
   },
-  quantity: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  servingSize: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  categories: {
-    fontSize: 18,
+  sectionContainer: {
     marginBottom: 16,
-  },
-  nutritionSection: {
-    marginBottom: 16,
-  },
-  allergensSection: {
-    marginBottom: 16,
-  },
-  ingredientsSection: {
-    marginBottom: 16,
-  },
-  additionalInfoSection: {
-    marginBottom: 16,
+    padding: 12,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  errorTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    color: 'red',
-  },
-  errorMessage: {
-    fontSize: 18,
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  scannedCodeText: {
-    fontSize: 14,
-    color: 'gray',
-    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingBottom: 4,
   },
   retryButton: {
     backgroundColor: '#007bff',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
+    marginTop: 16,
+    alignSelf: 'center',
   },
   retryButtonText: {
     color: 'white',
@@ -203,6 +195,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: 'center',
   },
+  detailHighlight: {
+    marginBottom: 8,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 6,
+    padding: 6,
+  },
+  detailHighlightLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+  },
+  detailHighlightText: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
 });
-
 export default NutritionScreen;
