@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Platform, StatusBar, SafeAreaView, ImageBackground, StyleSheet, Linking } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import Quote from '../../components/Quote';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
