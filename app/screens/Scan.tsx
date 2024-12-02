@@ -1,4 +1,4 @@
-import { View, Text,SafeAreaView, Platform, StatusBar, Pressable, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text,SafeAreaView, Platform, StatusBar, Pressable, StyleSheet, TouchableOpacity,Linking, Alert } from 'react-native'
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import {useCameraPermission, Camera, useCameraDevice, useCodeScanner} from "react-native-vision-camera"
 import { useIsFocused } from '@react-navigation/native';
@@ -47,6 +47,25 @@ const Scan = () => {
       }
     }
   })
+
+    // Permission handling for camera
+    const handleRequestPermission = async () => {
+      try {
+        const newPermission = await Camera.requestCameraPermission();
+        
+        // Directly open settings in this case
+        if (newPermission === 'denied') {
+          Linking.openSettings();
+        }
+      } catch (error) {
+        console.error('Permission request error:', error);
+        Alert.alert(
+          'Permission Error', 
+          'Could not request camera permission. Please allow permission manually in device settings.',
+          [{ text: 'OK' }]
+        );
+      }
+    };
   
   useEffect(() => {
     if (scannedCode) {
@@ -124,22 +143,25 @@ const Scan = () => {
   if (!hasPermission) {
     return (
       <SafeAreaView 
-      style={{
-        flex: 1,
-        backgroundColor:'white',
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'center',
-        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
-      }}
-    >
-        <View className='flex items-center justify-center'>
-          <Text>Camera Permission Required</Text>
-          <Text>We need camera access to scan barcodes</Text>
-          <TouchableOpacity className='p-5 mt-3 bg-gray-300 rounded-full'
-            onPress={requestPermission}
+        style={{
+          flex: 1,
+          backgroundColor: '#f4f4f4',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+        }}
+      >
+        <View style={styles.permissionContainer}>
+          <Text style={styles.permissionTitle}>Camera Permission Required</Text>
+          <Text style={styles.permissionSubtitle}>
+            We need camera access to scan barcodes and provide you with product information
+          </Text>
+          <TouchableOpacity 
+            style={styles.permissionButton}
+            onPress={handleRequestPermission}
           >
-            <Text>Grant Permission</Text>
+            <Text style={styles.permissionButtonText}>Grant Permission</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -178,6 +200,46 @@ const styles = StyleSheet.create({
       position: 'absolute',
       bottom: 20,
       left: 10,
+    },
+    permissionContainer: {
+      width: '80%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: 'white',
+      borderRadius: 20,
+      padding: 30,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    permissionTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      color: '#333',
+      marginBottom: 15,
+      textAlign: 'center',
+    },
+    permissionSubtitle: {
+      fontSize: 16,
+      color: '#666',
+      textAlign: 'center',
+      marginBottom: 20,
+      lineHeight: 24,
+    },
+    permissionButton: {
+      backgroundColor: '#202020',
+      paddingHorizontal: 20,
+      paddingVertical: 12,
+      borderRadius: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    permissionButtonText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 16,
     },
   });
 
