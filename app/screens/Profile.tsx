@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   quoteContainer: {
-    width: 400, 
+    width: 380, 
     height: 300, 
     alignItems: 'center',
     justifyContent: 'center',
