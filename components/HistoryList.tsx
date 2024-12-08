@@ -15,7 +15,7 @@ interface HistoryListProps {
   }[];
 }
 
-const BACKEND_URL = 'http://10.5.1.88:3000';
+const BACKEND_URL = 'http://10.5.1.152:3000';
 
 const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   const { foodData, setFoodData, saveScannedItem, isLoading } = useContext(ScanContext);

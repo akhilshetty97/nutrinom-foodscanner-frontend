@@ -21,7 +21,7 @@ const Scan = () => {
   const scannerEnabled = useRef(true); 
   // const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
   const { scannedCode, setScannedCode,foodData,setFoodData, saveScannedItem, clearScannedItem } = useContext(ScanContext);
-  const BACKEND_URL = 'http://10.5.1.88:3000';
+  const BACKEND_URL = 'http://10.5.1.152:3000';
 
   // Method Reset the scanner
   const resetScanner = () => {

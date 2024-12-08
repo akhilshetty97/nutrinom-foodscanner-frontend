@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'rea
 import React, { useMemo, useContext } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScanContext } from '../contexts/ScanContext';
+import NutriScoreBadge from './NutriScoreBadge';
 
 interface FoodData {
   product: {
@@ -125,7 +126,12 @@ const NutritionScreen: React.FC = () => {
       {/* Additional Information Section */}
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Additional Information</Text>
-        {product.nutriscore_grade && <Text>Nutri-Score: {product.nutriscore_grade}</Text>}
+        {product.nutriscore_grade && (
+          <View style={styles.scoreRow}>
+            <Text style={styles.scoreLabel}>Nutri-Score:</Text>
+            <NutriScoreBadge grade={product.nutriscore_grade} />
+          </View>
+        )}
         {product.ecoscore_grade && <Text>Eco-Score: {product.ecoscore_grade}</Text>}
         {product.nova_group !== undefined && <Text>NOVA Group: {product.nova_group}</Text>}
         {product.countries && <Text>Countries: {product.countries}</Text>}
@@ -209,6 +215,15 @@ const styles = StyleSheet.create({
   detailHighlightText: {
     fontSize: 16,
     fontWeight: '500',
+  },
+  scoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  scoreLabel: {
+    fontSize: 16,
+    marginRight: 8,
   },
 });
 export default NutritionScreen;

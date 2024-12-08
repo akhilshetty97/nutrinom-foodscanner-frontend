@@ -9,7 +9,7 @@ const History = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [productList, setProductList] = useState();
   const { user } = useContext(AuthContext);
-  const BACKEND_URL = 'http://10.5.1.88:3000';
+  const BACKEND_URL = 'http://10.5.1.152:3000';
 
   // Function to fetch product list
   const fetchProductList = async () => {

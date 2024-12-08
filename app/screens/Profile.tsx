@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#e7e3db',
     padding: 20,
   },
   quoteContainer: {
