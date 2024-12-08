@@ -77,12 +77,7 @@ const Scan = () => {
             saveScannedItem(scannedCode, response.data);
   
             // Navigate to NutritionScreen with the scanned food data
-            router.push({
-              pathname: '../(modals)/nutrition-screen',
-              params: { 
-                foodData: JSON.stringify(response.data) 
-              }
-            });
+            router.push('../(modals)/nutrition-screen');
           } else {
             console.warn("Unexpected status code:", response.status);
             // Optionally add error handling for non-200 status
@@ -94,41 +89,17 @@ const Scan = () => {
             // Check for specific error scenarios
             if (error.response?.status === 404) {
               // Product not found in database
-              router.push({
-                pathname: '../(modals)/nutrition-screen',
-                params: { 
-                  error: 'Product not found',
-                  scannedCode: scannedCode 
-                }
-              });
+              router.push('../(modals)/nutrition-screen');
             } else if (error.response?.status === 500) {
               // Server error
-              router.push({
-                pathname: '../(modals)/nutrition-screen',
-                params: { 
-                  error: 'Server error. Please try again later.',
-                  scannedCode: scannedCode 
-                }
-              });
+              router.push('../(modals)/nutrition-screen');
             } else {
               // Generic network or request error
-              router.push({
-                pathname: '../(modals)/nutrition-screen',
-                params: { 
-                  error: 'Unable to fetch product information',
-                  scannedCode: scannedCode 
-                }
-              });
+              router.push('../(modals)/nutrition-screen');
             }
           } else {
             // Non-Axios error
-          router.push({
-            pathname: '../(modals)/nutrition-screen',
-            params: { 
-              error: 'An unexpected error occurred',
-              scannedCode: scannedCode 
-            }
-          });
+          router.push( '../(modals)/nutrition-screen');
           }
         }
       };
