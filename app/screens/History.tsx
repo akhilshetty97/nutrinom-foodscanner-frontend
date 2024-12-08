@@ -57,22 +57,24 @@ const History = () => {
         width: '100%', 
         padding: 20, 
         borderBottomWidth: 1, 
-        borderBottomColor: '#ddd' 
+        borderBottomColor: '#ddd',
+        backgroundColor: '#f4f4f4' // Match with SafeAreaView background
       }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold' }}>History</Text>
       </View>
 
-      {
-        isLoading ? (
-          <View>
+      {/* Content Section with gray background */}
+      <View style={{ 
+        flex: 1,
+      }}>
+        {isLoading ? (
+          <View style={{ padding: 20 }}>
             <Text>Fetching data...</Text> 
           </View>
         ) : (      
-            <HistoryList productList={productList}/>
-        )
-      }
-
-
+          <HistoryList productList={productList}/>
+        )}
+      </View>
     </SafeAreaView>
   )
 }

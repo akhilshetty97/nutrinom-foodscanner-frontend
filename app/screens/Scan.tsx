@@ -145,7 +145,7 @@ const Scan = () => {
       <SafeAreaView 
         style={{
           flex: 1,
-          backgroundColor: '#f4f4f4',
+          backgroundColor: '#e7e3db',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

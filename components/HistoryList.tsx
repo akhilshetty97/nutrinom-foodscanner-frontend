@@ -97,7 +97,8 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 10,
     marginBottom: 15,
-    marginTop:10
+    marginTop:10,
+    
   },
   headerContainer: {
     flexDirection: 'row',
@@ -108,6 +109,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginRight: 10,
+    marginLeft: 9
   },
   countText: {
     fontSize: 14,
@@ -117,25 +119,28 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   itemContainer: {
-    marginBottom: 10,
+    marginVertical: 10,  
+    paddingHorizontal: 10,
   },
   touchableItem: {
     padding: 15, 
     borderRadius: 8, 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#e7e3db',
     flexDirection: 'row',
     alignItems: 'center',
+    height: 110, 
   },
   productImage: {
-    width: 80, 
-    height: 80, 
+    width: 90, 
+    height: 90, 
     borderRadius: 8, 
     marginRight: 15,
+    marginLeft: -2
   },
   textContainer: {
     flex: 1, 
