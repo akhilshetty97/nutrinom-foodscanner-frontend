@@ -3,6 +3,7 @@ import React, { useMemo, useContext } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScanContext } from '../contexts/ScanContext';
 import NutriScoreBadge from './NutriScoreBadge';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface FoodData {
@@ -107,6 +108,18 @@ const NutritionScreen: React.FC = () => {
           {product.nutriments?.fiber !== undefined && <Text>Fiber: {product.nutriments.fiber} g</Text>}
         </View>
       )}
+
+      {/* Expert Advice Section */}
+      <View style={styles.expertContainer}>
+        <View style={styles.expertHeaderRow}>
+          <Text style={styles.sectionTitle}>Expert Analysis</Text>
+          <MaterialCommunityIcons name="brain" size={24} color="#706a3e" />
+        </View>
+        <Text style={styles.expertText}>
+        ### Nutritional Quality Summary:\n\nHungry Jack Complete Buttermilk Pancake and Waffle Mix is a convenient option 
+        for breakfast, offering a low-fat choice with just 1 gram of fat per serving. 
+        </Text>
+      </View>
 
       {/* Allergens Section */}
       {product.allergens && (
@@ -232,6 +245,28 @@ const styles = StyleSheet.create({
   moreInfo: {
     marginLeft:8,
     marginTop: 2
-  }
+  },
+  expertContainer: {
+    marginBottom: 16,
+    padding: 12,
+    backgroundColor: '#fefae0',  
+    borderRadius: 8,
+    borderLeftWidth: 4,
+    borderLeftColor: '#d4a72c',  
+  },
+  expertHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingBottom: 4,
+    marginBottom: 8,
+  },
+  expertText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#333',
+  },
 });
 export default NutritionScreen;
