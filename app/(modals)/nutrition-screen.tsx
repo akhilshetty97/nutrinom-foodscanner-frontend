@@ -57,8 +57,15 @@ const NutritionScreen: React.FC = () => {
   // If there's an error, render error view
   if (errorMessage || !foodData || !foodData.product) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>No product information available</Text>
+      <View style={[styles.container, styles.centerContent]}>
+        <MaterialCommunityIcons 
+          name="barcode-off" 
+          size={64} 
+          color="#666"
+        />
+        <Text style={[styles.loadingText, styles.errorMessage]}>
+          No product information available
+        </Text>
         <TouchableOpacity 
           style={styles.retryButton}
           onPress={() => {
@@ -66,7 +73,7 @@ const NutritionScreen: React.FC = () => {
             router.back();
           }}
         >
-          <Text style={styles.retryButtonText}>Go Back</Text>
+          <Text style={styles.retryButtonText}>Try Another Scan</Text>
         </TouchableOpacity>
       </View>
     );
@@ -298,6 +305,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  errorMessage: {
+    marginTop: 16,
+    marginBottom: 8,
+    color: '#333',
+    fontWeight: '600'
   },
 });
 export default NutritionScreen;
