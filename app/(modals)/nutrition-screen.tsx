@@ -84,13 +84,6 @@ const NutritionScreen: React.FC = () => {
               <Text style={styles.detailHighlightText}>{product.brands}</Text>
             </View>
           )}
-          {product.quantity && (
-            <View style={styles.detailHighlight}>
-              <Text style={styles.detailHighlightLabel}>Quantity</Text>
-              <Text style={styles.detailHighlightText}>{product.quantity}</Text>
-            </View>
-          )}
-          {product.serving_size && <Text style={styles.detailText}>Serving Size: {product.serving_size}</Text>}
         </View>
       </View>
 
@@ -98,14 +91,30 @@ const NutritionScreen: React.FC = () => {
       {product.nutriscore_grade !== "not-applicable" && (
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Nutritional Information</Text>
-          {product.nutriments?.energy_kcal !== undefined && <Text>Calories: {product.nutriments.energy_kcal} kcal</Text>}
-          {product.nutriments?.carbohydrates !== undefined && <Text>Carbohydrates: {product.nutriments.carbohydrates} g</Text>}
-          {product.nutriments?.sugars !== undefined && <Text>Sugars: {product.nutriments.sugars} g</Text>}
-          {product.nutriments?.fat !== undefined && <Text>Fat: {product.nutriments.fat} g</Text>}
-          {product.nutriments?.saturated_fat !== undefined && <Text>Saturated Fat: {product.nutriments.saturated_fat} g</Text>}
-          {product.nutriments?.proteins !== undefined && <Text>Proteins: {product.nutriments.proteins} g</Text>}
-          {product.nutriments?.salt !== undefined && <Text>Salt: {product.nutriments.salt} g</Text>}
-          {product.nutriments?.fiber !== undefined && <Text>Fiber: {product.nutriments.fiber} g</Text>}
+          {product.nutriments?.energy_kcal !== undefined && 
+            <Text><Text style={styles.labelText}>Calories:</Text> {product.nutriments.energy_kcal.toFixed(2)} kcal</Text>
+          }
+          {product.nutriments?.carbohydrates !== undefined && 
+            <Text><Text style={styles.labelText}>Carbohydrates:</Text> {product.nutriments.carbohydrates.toFixed(2)} g</Text>
+          }
+          {product.nutriments?.sugars !== undefined && 
+            <Text><Text style={styles.labelText}>Sugars:</Text> {product.nutriments.sugars.toFixed(2)} g</Text>
+          }
+          {product.nutriments?.fat !== undefined && 
+            <Text><Text style={styles.labelText}>Fat:</Text> {product.nutriments.fat.toFixed(2)} g</Text>
+          }
+          {product.nutriments?.saturated_fat !== undefined && 
+            <Text><Text style={styles.labelText}>Saturated Fat:</Text> {product.nutriments.saturated_fat.toFixed(2)} g</Text>
+          }
+          {product.nutriments?.proteins !== undefined && 
+            <Text><Text style={styles.labelText}>Proteins:</Text> {product.nutriments.proteins.toFixed(2)} g</Text>
+          }
+          {product.nutriments?.salt !== undefined && 
+            <Text><Text style={styles.labelText}>Salt:</Text> {product.nutriments.salt.toFixed(2)} g</Text>
+          }
+          {product.nutriments?.fiber !== undefined && 
+            <Text><Text style={styles.labelText}>Fiber:</Text> {product.nutriments.fiber.toFixed(2)} g</Text>
+          }
         </View>
       )}
 
@@ -149,11 +158,20 @@ const NutritionScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         )}
-        {product.ecoscore_grade && <Text>Eco-Score: {product.ecoscore_grade}</Text>}
-        {product.nova_group !== undefined && <Text>NOVA Group: {product.nova_group}</Text>}
-        {product.countries && <Text>Countries: {product.countries}</Text>}
-        {product.packaging && <Text>Packaging: {product.packaging}</Text>}
+        {product.ecoscore_grade!='unknown' && 
+          <Text><Text style={styles.labelText}>Eco-Score:</Text> {product.ecoscore_grade}</Text>
+        }
+        {product.nova_group !== undefined && 
+          <Text><Text style={styles.labelText}>NOVA Group:</Text> {product.nova_group}</Text>
+        }
+        {product.countries && 
+          <Text><Text style={styles.labelText}>Countries:</Text> {product.countries}</Text>
+        }
+        {product.packaging && 
+          <Text><Text style={styles.labelText}>Packaging:</Text> {product.packaging}</Text>
+        }
       </View>
+
     </ScrollView>
   );
 };
@@ -186,6 +204,10 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 16,
     marginBottom: 4,
+  },
+  labelText: {
+    fontWeight: 'bold',
+    fontSize: 15,
   },
   sectionContainer: {
     marginBottom: 16,
@@ -239,8 +261,9 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   scoreLabel: {
-    fontSize: 16,
+    fontSize: 15,
     marginRight: 8,
+    fontWeight:'bold'
   },
   moreInfo: {
     marginLeft:8,
