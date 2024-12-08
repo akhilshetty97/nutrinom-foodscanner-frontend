@@ -85,7 +85,11 @@ const NutritionScreen: React.FC = () => {
     <ScrollView contentContainerStyle={styles.container}>
       {/* Top Section with Product Details */}
       <View style={styles.topSection}>
-        {product.image_front_small_url && <Image source={{ uri: product.image_front_small_url }} style={styles.image} resizeMode="contain"/>}
+        <Image source={
+              product.image_front_small_url 
+                ? { uri: product.image_front_small_url }
+                : require('../../assets/images/default_food.png')  
+            } style={styles.image} resizeMode="contain"/>
         <View style={styles.productDetailsContainer}>
           <Text style={styles.title}>{product.product_name}</Text>
           {product.brands && (

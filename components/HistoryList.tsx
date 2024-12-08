@@ -15,7 +15,7 @@ interface HistoryListProps {
   }[];
 }
 
-const BACKEND_URL = 'http://10.5.1.152:3000';
+const BACKEND_URL = 'http://10.5.1.88:3000';
 
 const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   const { foodData, setFoodData, saveScannedItem, isLoading } = useContext(ScanContext);
@@ -49,9 +49,14 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
         disabled = {historyLoading}
       >
         <Image 
-          source={{ uri: item.productImage }}
+          source={
+            item.productImage 
+              ? { uri: item.productImage }
+              : require('../assets/images/default_food.png') 
+          }
+          defaultSource={require('../assets/images/default_food.png')}
           style={styles.productImage}
-          resizeMode="cover"
+          resizeMode="contain"
         />
         <View style={styles.textContainer}>
           <Text 
