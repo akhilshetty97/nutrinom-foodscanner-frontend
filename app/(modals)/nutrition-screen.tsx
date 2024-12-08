@@ -1,8 +1,9 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import React, { useMemo, useContext } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScanContext } from '../contexts/ScanContext';
 import NutriScoreBadge from './NutriScoreBadge';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface FoodData {
   product: {
@@ -126,10 +127,13 @@ const NutritionScreen: React.FC = () => {
       {/* Additional Information Section */}
       <View style={styles.sectionContainer}>
         <Text style={styles.sectionTitle}>Additional Information</Text>
-        {product.nutriscore_grade && (
+        {['a', 'b', 'c', 'd', 'e'].includes(product.nutriscore_grade?.toLowerCase() || '') && (
           <View style={styles.scoreRow}>
             <Text style={styles.scoreLabel}>Nutri-Score:</Text>
             <NutriScoreBadge grade={product.nutriscore_grade} />
+            <TouchableOpacity onPress={()=> Linking.openURL('https://en.wikipedia.org/wiki/Nutri-Score')}>
+              <Ionicons style={styles.moreInfo} name="information-circle-outline" size={24} color="gray" />
+            </TouchableOpacity>
           </View>
         )}
         {product.ecoscore_grade && <Text>Eco-Score: {product.ecoscore_grade}</Text>}
@@ -225,5 +229,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginRight: 8,
   },
+  moreInfo: {
+    marginLeft:8,
+    marginTop: 2
+  }
 });
 export default NutritionScreen;

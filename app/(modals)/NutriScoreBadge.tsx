@@ -6,8 +6,13 @@ interface NutriScoreBadgeProps {
 }
 
 const NutriScoreBadge: React.FC<NutriScoreBadgeProps> = ({ grade }) => {
+  const normalizedGrade = grade.toLowerCase();
+  const isValidGrade = ['a', 'b', 'c', 'd', 'e'].includes(normalizedGrade);
+  
+  if (!isValidGrade) return null;
+
   const getBackgroundColor = (score: string) => {
-    switch (score.toLowerCase()) {
+    switch (score) {
       case 'a':
         return '#1a7f37'; // Dark green
       case 'b':
@@ -24,7 +29,12 @@ const NutriScoreBadge: React.FC<NutriScoreBadgeProps> = ({ grade }) => {
   };
 
   return (
-    <View style={[styles.badge, { backgroundColor: getBackgroundColor(grade) }]}>
+    <View 
+      style={[
+        styles.badge, 
+        { backgroundColor: getBackgroundColor(normalizedGrade) }
+      ]}
+    >
       <Text style={styles.text}>{grade.toUpperCase()}</Text>
     </View>
   );
