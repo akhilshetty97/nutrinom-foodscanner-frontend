@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView, Platform, StatusBar } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, Platform, StatusBar, ActivityIndicator } from 'react-native'
 import React,{useState, useEffect, useContext, useCallback} from 'react'
 import HistoryList from '../../components/HistoryList';
 import { AuthContext } from '../contexts/AuthContext.js';
@@ -58,7 +58,7 @@ const History = () => {
         padding: 20, 
         borderBottomWidth: 1, 
         borderBottomColor: '#ddd',
-        backgroundColor: '#f4f4f4' // Match with SafeAreaView background
+        backgroundColor: '#f4f4f4' 
       }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold' }}>History</Text>
       </View>
@@ -68,10 +68,23 @@ const History = () => {
         flex: 1,
       }}>
         {isLoading ? (
-          <View style={{ padding: 20 }}>
-            <Text>Fetching data...</Text> 
-          </View>
-        ) : (      
+        <View style={{ 
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingVertical: 20
+        }}>
+          <ActivityIndicator size="large" color="#d4a72c" />
+          <Text style={{ 
+            marginTop: 12,
+            fontSize: 16,
+            color: '#666',
+            fontWeight: '500'
+          }}>
+            Loading history...
+          </Text>
+        </View>
+      )  : (      
           <HistoryList productList={productList}/>
         )}
       </View>

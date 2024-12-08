@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Linking, ActivityIndicator } from 'react-native';
 import React, { useMemo, useContext } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScanContext } from '../contexts/ScanContext';
@@ -45,8 +45,11 @@ const NutritionScreen: React.FC = () => {
   // Loading state
   if (isLoading) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.loadingText}>Loading product information...</Text>
+      <View style={[styles.container, styles.centerContent]}>
+        <ActivityIndicator size="large" color="#d4a72c" />
+        <Text style={[styles.loadingText, { marginTop: 12 }]}>
+          Loading product information...
+        </Text>
       </View>
     );
   }
@@ -290,6 +293,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#333',
+  },
+  centerContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default NutritionScreen;
