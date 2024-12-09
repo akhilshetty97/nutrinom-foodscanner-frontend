@@ -153,7 +153,7 @@ const NutritionScreen: React.FC = () => {
       {product.allergens && (
         <View style={styles.sectionContainer}>
           <View style={styles.headerIcons}>
-            <MaterialIcons name="no-meals" size={24} color="black" />
+            <MaterialIcons style={{marginLeft:-2}} name="no-meals" size={24} color="black" />
             <Text style={styles.sectionTitle}>Allergens</Text>
           </View>
           <Text>{product.allergens}</Text>
