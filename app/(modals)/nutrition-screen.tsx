@@ -5,6 +5,8 @@ import { ScanContext } from '../contexts/ScanContext';
 import NutriScoreBadge from './NutriScoreBadge';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 interface FoodData {
   product: {
@@ -104,7 +106,10 @@ const NutritionScreen: React.FC = () => {
       {/* Nutritional Information Section */}
       {product.nutriscore_grade !== "not-applicable" && (
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Nutritional Information</Text>
+          <View style={styles.headerIcons}>
+            <MaterialCommunityIcons name="nutrition" size={24} color="black" />
+            <Text style={styles.sectionTitle}>Nutritional Information</Text>
+          </View>
           {product.nutriments?.energy_kcal !== undefined && 
             <Text><Text style={styles.labelText}>Calories:</Text> {product.nutriments.energy_kcal.toFixed(2)} kcal</Text>
           }
@@ -135,8 +140,8 @@ const NutritionScreen: React.FC = () => {
       {/* Expert Advice Section */}
       <View style={styles.expertContainer}>
         <View style={styles.expertHeaderRow}>
+          <MaterialCommunityIcons style={styles.expertIcon} name="brain" size={24} color="#706a3e" />
           <Text style={styles.sectionTitle}>Expert Analysis</Text>
-          <MaterialCommunityIcons name="brain" size={24} color="#706a3e" />
         </View>
         <Text style={styles.expertText}>
         ### Nutritional Quality Summary:\n\nHungry Jack Complete Buttermilk Pancake and Waffle Mix is a convenient option 
@@ -147,7 +152,10 @@ const NutritionScreen: React.FC = () => {
       {/* Allergens Section */}
       {product.allergens && (
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Allergens</Text>
+          <View style={styles.headerIcons}>
+            <MaterialIcons name="no-meals" size={24} color="black" />
+            <Text style={styles.sectionTitle}>Allergens</Text>
+          </View>
           <Text>{product.allergens}</Text>
         </View>
       )}
@@ -155,14 +163,20 @@ const NutritionScreen: React.FC = () => {
       {/* Ingredients Section */}
       {product.ingredients_text && (
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Ingredients</Text>
+          <View style={styles.headerIcons}>
+            <FontAwesome5 style={{marginTop:3, marginHorizontal:2}} name="pepper-hot" size={20} color="black" />
+            <Text style={styles.sectionTitle}>Ingredients</Text>
+          </View>
           <Text>{product.ingredients_text}</Text>
         </View>
       )}
 
       {/* Additional Information Section */}
       <View style={styles.sectionContainer}>
+      <View style={styles.headerIcons}>
+        <MaterialIcons name="notes" size={24} color="black" />
         <Text style={styles.sectionTitle}>Additional Information</Text>
+      </View>
         {['a', 'b', 'c', 'd', 'e'].includes(product.nutriscore_grade?.toLowerCase() || '') && (
           <View style={styles.scoreRow}>
             <Text style={styles.scoreLabel}>Nutri-Score:</Text>
@@ -292,14 +306,16 @@ const styles = StyleSheet.create({
     borderLeftColor: '#d4a72c',  
   },
   expertHeaderRow: {
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 5,
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
-    paddingBottom: 4,
-    marginBottom: 8,
   },
+  expertIcon:{
+    marginBottom:8
+  }, 
   expertText: {
     fontSize: 16,
     lineHeight: 24,
@@ -316,5 +332,10 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: '600'
   },
+  headerIcons: {
+    display:'flex',
+    flexDirection:'row',
+    gap:5
+  }
 });
 export default NutritionScreen;

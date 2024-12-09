@@ -45,10 +45,10 @@ const Scan = () => {
   const codeScanner = useCodeScanner({
     codeTypes: ['ean-13', 'upc-a', 'itf'],
     regionOfInterest:{
-      x: 0.15,  // 15% from left
-      y: 0.3,   // 30% from top
-      width: 0.7, // 70% width
-      height: 0.4, // 40% height
+      x: 0.1,     // 10% from left (making it wider)
+      y: 0.35,    // 35% from top
+      width: 0.8,  // 80% width (wider scan area)
+      height: 0.3, // 30% height (shorter scan area)
     },
     onCodeScanned: (codes) => {
       if (!scannerEnabled.current) return;
@@ -238,25 +238,25 @@ const styles = StyleSheet.create({
       fontSize: 16,
     },
     overlayTop: {
-      height: '30%',  // Matches regionOfInterest y value
+      height: '35%',  // Matches regionOfInterest y value
       backgroundColor: 'rgba(0,0,0,0.5)',
     },
     centerRow: {
       flexDirection: 'row',
-      height: '40%',  // Matches regionOfInterest height
+      height: '30%',  // Matches regionOfInterest height
     },
     overlaySide: {
-      width: '15%',  // Matches regionOfInterest x value
+      width: '10%',  // Matches regionOfInterest x value
       backgroundColor: 'rgba(0,0,0,0.5)',
     },
     overlayBottom: {
-      height: '30%',
+      height: '35%',
       backgroundColor: 'rgba(0,0,0,0.5)',
       alignItems: 'center',
       paddingTop: 20,
     },
     scanArea: {
-      width: '70%',  // Matches regionOfInterest width
+      width: '80%',  // Matches regionOfInterest width
       height: '100%',
       borderColor: '#fff',
       borderWidth: 2,
