@@ -1,4 +1,4 @@
-import { View, Text,SafeAreaView, Platform, StatusBar, Pressable, StyleSheet, TouchableOpacity,Linking, Alert } from 'react-native'
+import { View, Text,SafeAreaView, Platform, StatusBar, Pressable, StyleSheet, TouchableOpacity,Linking, Alert, Dimensions } from 'react-native'
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import {useCameraPermission, Camera, useCameraDevice, useCodeScanner} from "react-native-vision-camera"
 import { useIsFocused } from '@react-navigation/native';
@@ -9,6 +9,12 @@ import { ScanContext } from '../contexts/ScanContext.js';
 
 // import { BACKEND_URL } from '@env';
 // import NutritionScreen from '../(modals)/nutrition-screen';
+
+// Screen dimensions for scan
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCAN_AREA_WIDTH = SCREEN_WIDTH * 0.8;
+const SCAN_AREA_HEIGHT = SCREEN_HEIGHT * 0.15;
 
 
 const Scan = () => {
@@ -38,6 +44,12 @@ const Scan = () => {
 
   const codeScanner = useCodeScanner({
     codeTypes: ['ean-13', 'upc-a', 'itf'],
+    regionOfInterest:{
+      x: 0.15,  // 15% from left
+      y: 0.3,   // 30% from top
+      width: 0.7, // 70% width
+      height: 0.4, // 40% height
+    },
     onCodeScanned: (codes) => {
       if (!scannerEnabled.current) return;
       const firstCode = codes[0]?.value;
@@ -141,24 +153,38 @@ const Scan = () => {
 
   return (
     <View 
-    style={{
-      flex: 1,
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
-    }}
-  >
-    {Platform.OS === 'android' ? <StatusBar hidden/>:null}
-    <Camera 
-    style={styles.camera} 
-    device={device} 
-    isActive={isFocused}
-    codeScanner={codeScanner}
-    />
-    {scannedCode && (
+      style={{
+        flex: 1,
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+      }}
+    >
+      {Platform.OS === 'android' ? <StatusBar hidden/> : null}
+      <Camera 
+        style={styles.camera} 
+        device={device} 
+        isActive={isFocused}
+        codeScanner={codeScanner}
+      />
+      
+      {/* Overlay with scan area */}
+      <View style={StyleSheet.absoluteFill}>
+        <View style={styles.overlayTop} />
+        <View style={styles.centerRow}>
+          <View style={styles.overlaySide} />
+          <View style={styles.scanArea} />
+          <View style={styles.overlaySide} />
+        </View>
+        <View style={styles.overlayBottom}>
+          <Text style={styles.scanText}>Align barcode within frame</Text>
+        </View>
+      </View>
+  
+      {scannedCode && (
         <View style={styles.scannedCodeContainer}>
         </View>
       )}
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -211,6 +237,38 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 16,
     },
+    overlayTop: {
+      height: '30%',  // Matches regionOfInterest y value
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    centerRow: {
+      flexDirection: 'row',
+      height: '40%',  // Matches regionOfInterest height
+    },
+    overlaySide: {
+      width: '15%',  // Matches regionOfInterest x value
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    overlayBottom: {
+      height: '30%',
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      alignItems: 'center',
+      paddingTop: 20,
+    },
+    scanArea: {
+      width: '70%',  // Matches regionOfInterest width
+      height: '100%',
+      borderColor: '#fff',
+      borderWidth: 2,
+    },
+    scanText: {
+      color: '#fff',
+      fontSize: 16,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      padding: 8,
+      borderRadius: 4,
+      overflow: 'hidden',
+    }
   });
 
 export default Scan

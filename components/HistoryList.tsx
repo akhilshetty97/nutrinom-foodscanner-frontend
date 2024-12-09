@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F5',
     borderRadius: 12,
     marginTop: 150,
-    height: 300, // Give more vertical space
+    height: 300, 
   },
   emptyTitle: {
     fontSize: 18,
