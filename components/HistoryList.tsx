@@ -76,7 +76,11 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   if (!productList || productList.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>No scan history found</Text>
+        <MaterialIcons name="qr-code-scanner" size={48} color="#888" />
+        <Text style={styles.emptyTitle}>No Scan History Yet</Text>
+        <Text style={styles.emptyDescription}>
+          Start scanning products to track and manage your items
+        </Text>
       </View>
     );
   }
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#e7e3db',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 110, 
+    height: 100, 
   },
   productImage: {
     width: 90, 
@@ -155,18 +159,35 @@ const styles = StyleSheet.create({
     fontSize: 15, 
     fontWeight: '500',
   },
+  emptyText: {
+    fontSize: 16,
+    color: '#888',
+  },
   emptyContainer: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 32,
     backgroundColor: '#F5F5F5',
-    borderRadius: 8,
+    borderRadius: 12,
+    marginTop: 150,
+    height: 300, // Give more vertical space
   },
-  emptyText: {
-    fontSize: 16,
-    color: '#888',
-  }
+  emptyTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyDescription: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 24,
+    paddingHorizontal: 20,
+  },
 });
 
 export default HistoryList

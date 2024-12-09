@@ -155,7 +155,6 @@ const Scan = () => {
     />
     {scannedCode && (
         <View style={styles.scannedCodeContainer}>
-          <Text>Scanned Code: {scannedCode}</Text>
         </View>
       )}
     </View>
