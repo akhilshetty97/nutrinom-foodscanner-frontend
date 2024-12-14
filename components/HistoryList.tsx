@@ -18,7 +18,7 @@ interface HistoryListProps {
 const BACKEND_URL = 'http://10.5.1.88:3000';
 
 const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
-  const { foodData, setFoodData, saveScannedItem, isLoading } = useContext(ScanContext);
+  const { foodData, setFoodData, saveScannedItem, setExpertData, isLoading } = useContext(ScanContext);
   const [historyLoading, setIsHistoryLoading] = useState(false);
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
   const router = useRouter(); 
@@ -26,17 +26,35 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   // Function to handle product details fetch
   const handleProductPress = async (productId: number) => {
     try {
-      // Show loading indicator for the specific product
       setIsHistoryLoading(true);
-      
+      setLoadingProductId(productId);
+  
       // Fetch data for that particular product id
       const response = await axios.get(`${BACKEND_URL}/product/${productId}`);
       const productInfo = response.data.productInfo;
-      await saveScannedItem(productInfo._id,productInfo, true);
-
+  
+      if (!productInfo) {
+        throw new Error('Product information not found');
+      }
+  
+      // Fetch LLM data from database
+      const expertResponse = await axios.get(`${BACKEND_URL}/product/llm/${productId}`);
+      const expertInfo = expertResponse.data.expertInfo;
+  
+      // Simply wrap the entire product data in the expected structure
+      setFoodData({
+        product: productInfo
+      });
+      setExpertData(expertInfo);
+  
+      await new Promise(resolve => setTimeout(resolve, 100));
+      router.push('../(modals)/nutrition-screen');
+  
     } catch (error) {
       console.error('Error fetching product details:', error);
     } finally {
+      setIsHistoryLoading(false);
+      setLoadingProductId(null);
     }
   };
 

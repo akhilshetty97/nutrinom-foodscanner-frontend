@@ -40,45 +40,9 @@ interface FoodData {
 }
 
 const NutritionScreen: React.FC = () => {
-  const { foodData, clearScannedItem, isLoading} = useContext(ScanContext);
+  const { foodData, expertData, clearScannedItem, isLoading} = useContext(ScanContext);
   const router = useRouter();
   const params = useLocalSearchParams();
-  const [expertAnalysis, setExpertAnalysis] = useState<string>('');
-  const [isExpertLoading, setIsExpertLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchExpertAnalysis = async () => {
-      // Only fetch if we have nutritional information
-      if (foodData?.product?.nutriments && Object.keys(foodData.product.nutriments).length > 0) {
-        setIsExpertLoading(true);
-        try {
-          const nutritionPayload = {
-            foodName: foodData.product.product_name,
-            foodNutrition: {
-              calories: foodData.product.nutriments.energy_kcal,
-              carbohydrates: foodData.product.nutriments.carbohydrates,
-              sugars: foodData.product.nutriments.sugars,
-              fat: foodData.product.nutriments.fat,
-              saturatedFat: foodData.product.nutriments.saturated_fat,
-              proteins: foodData.product.nutriments.proteins,
-              salt: foodData.product.nutriments.salt,
-              fiber: foodData.product.nutriments.fiber
-            }
-          };
-
-          const response = await axios.post(`${BACKEND_URL}/api/llm`, nutritionPayload);
-          setExpertAnalysis(response.data.analysis);
-        } catch (error) {
-          console.error('Error fetching expert analysis:', error);
-          setExpertAnalysis('');
-        } finally {
-          setIsExpertLoading(false);
-        }
-      }
-    };
-
-    fetchExpertAnalysis();
-  }, [foodData]);
 
   // Check for error from previous screen
   const errorMessage = params.error as string | undefined;
@@ -121,7 +85,6 @@ const NutritionScreen: React.FC = () => {
   }
 
   const { product } = foodData;
-  const hasNutrition = product.nutriments && Object.keys(product.nutriments).length > 0;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -178,19 +141,13 @@ const NutritionScreen: React.FC = () => {
       )}
 
       {/* Expert Analysis Section - Only show if we have nutrition data */}
-      {hasNutrition && (
+      {expertData && (
         <View style={styles.expertContainer}>
           <View style={styles.expertHeaderRow}>
             <MaterialCommunityIcons style={styles.expertIcon} name="brain" size={24} color="#706a3e" />
             <Text style={styles.sectionTitle}>Expert Analysis</Text>
           </View>
-          {isExpertLoading ? (
-            <ActivityIndicator size="small" color="#d4a72c" />
-          ) : expertAnalysis ? (
-            <Text style={styles.expertText}>{expertAnalysis}</Text>
-          ) : (
-            <Text style={styles.expertText}>Analysis not available at the moment.</Text>
-          )}
+            <Text style={styles.expertText}>{expertData}</Text>
         </View>
       )}
 
