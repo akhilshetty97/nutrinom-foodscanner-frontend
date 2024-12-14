@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Linking, ActivityIndicator } from 'react-native';
-import React, { useMemo, useContext } from 'react';
+import React, { useMemo, useContext, useState, useEffect } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ScanContext } from '../contexts/ScanContext';
 import NutriScoreBadge from './NutriScoreBadge';
@@ -7,6 +7,9 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import axios from 'axios';
+
+const BACKEND_URL = 'http://10.5.1.88:3000';
 
 interface FoodData {
   product: {
@@ -40,6 +43,42 @@ const NutritionScreen: React.FC = () => {
   const { foodData, clearScannedItem, isLoading} = useContext(ScanContext);
   const router = useRouter();
   const params = useLocalSearchParams();
+  const [expertAnalysis, setExpertAnalysis] = useState<string>('');
+  const [isExpertLoading, setIsExpertLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchExpertAnalysis = async () => {
+      // Only fetch if we have nutritional information
+      if (foodData?.product?.nutriments && Object.keys(foodData.product.nutriments).length > 0) {
+        setIsExpertLoading(true);
+        try {
+          const nutritionPayload = {
+            foodName: foodData.product.product_name,
+            foodNutrition: {
+              calories: foodData.product.nutriments.energy_kcal,
+              carbohydrates: foodData.product.nutriments.carbohydrates,
+              sugars: foodData.product.nutriments.sugars,
+              fat: foodData.product.nutriments.fat,
+              saturatedFat: foodData.product.nutriments.saturated_fat,
+              proteins: foodData.product.nutriments.proteins,
+              salt: foodData.product.nutriments.salt,
+              fiber: foodData.product.nutriments.fiber
+            }
+          };
+
+          const response = await axios.post(`${BACKEND_URL}/api/llm`, nutritionPayload);
+          setExpertAnalysis(response.data.analysis);
+        } catch (error) {
+          console.error('Error fetching expert analysis:', error);
+          setExpertAnalysis('');
+        } finally {
+          setIsExpertLoading(false);
+        }
+      }
+    };
+
+    fetchExpertAnalysis();
+  }, [foodData]);
 
   // Check for error from previous screen
   const errorMessage = params.error as string | undefined;
@@ -82,6 +121,7 @@ const NutritionScreen: React.FC = () => {
   }
 
   const { product } = foodData;
+  const hasNutrition = product.nutriments && Object.keys(product.nutriments).length > 0;
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -137,17 +177,22 @@ const NutritionScreen: React.FC = () => {
         </View>
       )}
 
-      {/* Expert Advice Section */}
-      <View style={styles.expertContainer}>
-        <View style={styles.expertHeaderRow}>
-          <MaterialCommunityIcons style={styles.expertIcon} name="brain" size={24} color="#706a3e" />
-          <Text style={styles.sectionTitle}>Expert Analysis</Text>
+      {/* Expert Analysis Section - Only show if we have nutrition data */}
+      {hasNutrition && (
+        <View style={styles.expertContainer}>
+          <View style={styles.expertHeaderRow}>
+            <MaterialCommunityIcons style={styles.expertIcon} name="brain" size={24} color="#706a3e" />
+            <Text style={styles.sectionTitle}>Expert Analysis</Text>
+          </View>
+          {isExpertLoading ? (
+            <ActivityIndicator size="small" color="#d4a72c" />
+          ) : expertAnalysis ? (
+            <Text style={styles.expertText}>{expertAnalysis}</Text>
+          ) : (
+            <Text style={styles.expertText}>Analysis not available at the moment.</Text>
+          )}
         </View>
-        <Text style={styles.expertText}>
-        ### Nutritional Quality Summary:\n\nHungry Jack Complete Buttermilk Pancake and Waffle Mix is a convenient option 
-        for breakfast, offering a low-fat choice with just 1 gram of fat per serving. 
-        </Text>
-      </View>
+      )}
 
       {/* Allergens Section */}
       {product.allergens && (
