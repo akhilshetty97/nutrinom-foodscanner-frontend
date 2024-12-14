@@ -37,15 +37,19 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
         throw new Error('Product information not found');
       }
   
-      // Fetch LLM data from database
-      const expertResponse = await axios.get(`${BACKEND_URL}/product/llm/${productId}`);
-      const expertInfo = expertResponse.data.expertInfo;
-  
-      // Simply wrap the entire product data in the expected structure
+      // Set food data first
       setFoodData({
-        product: productInfo
+        product: productInfo 
       });
-      setExpertData(expertInfo);
+  
+      try {
+        // Try to fetch expert info
+        const expertResponse = await axios.get(`${BACKEND_URL}/product/llm/${productId}`);
+        setExpertData(expertResponse.data?.expertInfo || null);
+      } catch (expertError) {
+        // Set expert data to null if fetch fails
+        setExpertData(null);
+      }
   
       await new Promise(resolve => setTimeout(resolve, 100));
       router.push('../(modals)/nutrition-screen');
@@ -58,9 +62,13 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
     }
   };
 
+
   // Render individual product item
   const renderProductItem = ({ item }: { item: NonNullable<HistoryListProps['productList']>[0] }) => (
-    <View style={styles.itemContainer}>
+    <View style={[
+      styles.itemContainer, 
+      historyLoading && { opacity: 0.8 }  // Add opacity when loading
+    ]}>
       <TouchableOpacity 
         style={styles.touchableItem}
         onPress={() => handleProductPress(item.productId)}
@@ -104,7 +112,10 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[
+      styles.container, 
+      historyLoading && { opacity: 0.8 }  // Add opacity to main container when loading
+    ]}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Scan History</Text>
         <Text style={styles.countText}>({productList.length} items)</Text>
