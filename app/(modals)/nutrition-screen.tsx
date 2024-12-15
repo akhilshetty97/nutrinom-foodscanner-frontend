@@ -9,7 +9,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import axios from 'axios';
 
-const BACKEND_URL = 'http://10.5.1.88:3000';
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 interface FoodData {
   product: {

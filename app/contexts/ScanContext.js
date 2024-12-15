@@ -11,7 +11,7 @@ export const ScanProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { user } = useContext(AuthContext);
-  const BACKEND_URL = 'http://10.5.1.88:3000';
+  const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
   const saveScannedItem = async (code, data) => {
     // Reset previous error and set loading

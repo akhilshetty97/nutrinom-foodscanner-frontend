@@ -7,9 +7,6 @@ import axios from 'axios';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { ScanContext } from '../contexts/ScanContext.js';
 
-// import { BACKEND_URL } from '@env';
-// import NutritionScreen from '../(modals)/nutrition-screen';
-
 // Screen dimensions for scan
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -27,7 +24,7 @@ const Scan = () => {
   const scannerEnabled = useRef(true); 
   // const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
   const { scannedCode, setScannedCode,foodData,setFoodData, saveScannedItem, clearScannedItem } = useContext(ScanContext);
-  const BACKEND_URL = 'http://10.5.1.88:3000';
+  const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
   // Method Reset the scanner
   const resetScanner = () => {
