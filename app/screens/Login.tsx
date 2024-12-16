@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext.js';
 
-const IOS_CLIENT_ID = '145316921728-rh0ttpefq7r5ot5ou62ue2ivrpbhg0ma.apps.googleusercontent.com';
+const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID;
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 const Login = () => {
