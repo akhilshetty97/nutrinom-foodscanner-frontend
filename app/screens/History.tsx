@@ -15,7 +15,6 @@ const History = () => {
   const fetchProductList = async () => {
     try {
       setIsLoading(true);
-      console.log('User', user);
       const response = await axios.get(`${BACKEND_URL}/product/history/${user.id}`);
 
       if (response.data.scannedProducts) {
