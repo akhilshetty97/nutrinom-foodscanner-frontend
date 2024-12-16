@@ -4,6 +4,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { ScanContext } from '../app/contexts/ScanContext.js';
+import * as Sentry from '@sentry/react-native';
+import { AuthContext } from '../app/contexts/AuthContext';
 
 // Define the type for props
 interface HistoryListProps {
@@ -21,6 +23,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   const { foodData, setFoodData, saveScannedItem, setExpertData, isLoading } = useContext(ScanContext);
   const [historyLoading, setIsHistoryLoading] = useState(false);
   const [loadingProductId, setLoadingProductId] = useState<number | null>(null);
+  const { user } = useContext(AuthContext);
   const router = useRouter(); 
 
   // Function to handle product details fetch
@@ -55,7 +58,17 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
       router.push('../(modals)/nutrition-screen');
   
     } catch (error) {
-      console.error('Error fetching product details:', error);
+      Sentry.captureException(error, {
+        tags: {
+          location: 'product_details_fetch',
+          errorType: error instanceof Error ? error.name : 'unknown',
+          productId: productId.toString()
+        },
+        extra: {
+          userId: user?.id,
+          loadingProductId
+        }
+      });
     } finally {
       setIsHistoryLoading(false);
       setLoadingProductId(null);

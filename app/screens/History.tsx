@@ -4,6 +4,7 @@ import HistoryList from '../../components/HistoryList';
 import { AuthContext } from '../contexts/AuthContext.js';
 import { useFocusEffect } from '@react-navigation/native'
 import axios from 'axios';
+import * as Sentry from '@sentry/react-native';
 
 const History = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +22,16 @@ const History = () => {
         setProductList(response.data.scannedProducts);
       }
     } catch(error) {
-      console.error('Error fetching product history:', error);
+      Sentry.captureException(error, {
+        tags: {
+          location: 'history_fetch',
+          errorType: error instanceof Error ? error.name : 'unknown'
+        },
+        extra: {
+          userId: user?.id,
+          hasUser: !!user
+        }
+      });
     } finally {
       setIsLoading(false);
     }

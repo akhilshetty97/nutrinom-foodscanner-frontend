@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Platform, StatusBar, SafeAreaView, ImageB
 import { AuthContext } from '../contexts/AuthContext';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import * as Sentry from '@sentry/react-native';
 
 const foodFacts = [
   "Bananas are berries, but strawberries aren't!",
@@ -66,9 +67,22 @@ const ProfileScreen = () => {
 
   const handleLogout = async () => {
     try {
+      Sentry.addBreadcrumb({
+        category: 'auth',
+        message: 'User initiated logout',
+        level: 'info'
+      });
       await logout();
     } catch (error) {
-      console.error('Logout failed:', error);
+      Sentry.captureException(error, {
+        tags: {
+          location: 'profile_logout',
+          errorType: error instanceof Error ? error.name : 'unknown'
+        },
+        extra: {
+          userId: user?.id
+        }
+      });
     }
   };
 
@@ -82,7 +96,15 @@ const ProfileScreen = () => {
         url = 'https://github.com/akhilshetty97'; 
         break;
     }
-    Linking.openURL(url).catch((err) => console.error('Could not open URL:', err));
+    Linking.openURL(url).catch((err) => {
+      Sentry.captureException(err, {
+        tags: {
+          location: 'social_link',
+          platform,
+          errorType: err instanceof Error ? err.name : 'unknown'
+        }
+      });
+    });
   };
 
   return (

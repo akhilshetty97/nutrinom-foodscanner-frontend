@@ -21,20 +21,31 @@ export const AuthProvider = ({ children }) => {
           setIsAuthenticated(true);
         }
       } catch (error) {
-        console.error('Critical Error loading user:', error);
+        Sentry.captureException(error, {
+          tags: {
+            location: 'auth_load',
+            errorType: error instanceof Error ? error.name : 'unknown'
+          },
+          extra: {
+            hasStoredData: !!(await AsyncStorage.getItem('user'))
+          }
+        });
         
-        // More comprehensive error logging
-        if (error instanceof Error) {
-          console.error('Error Name:', error.name);
-          console.error('Error Message:', error.message);
-          console.error('Error Stack:', error.stack);
-        }
-
         // Attempt to clear and reinitialize storage
         try {
           await AsyncStorage.clear();
+          Sentry.addBreadcrumb({
+            category: 'auth',
+            message: 'Successfully cleared AsyncStorage after error',
+            level: 'warning'
+          });
         } catch (clearError) {
-          console.error('Failed to clear AsyncStorage:', clearError);
+          Sentry.captureException(clearError, {
+            tags: {
+              location: 'auth_storage_clear',
+              errorType: clearError instanceof Error ? clearError.name : 'unknown'
+            }
+          });
         }
       } finally {
         setLoading(false);
@@ -53,10 +64,24 @@ export const AuthProvider = ({ children }) => {
       // Ensure these are awaited
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       await AsyncStorage.setItem('token', token);
+
+      // Set user in Sentry for better error tracking
+      Sentry.setUser({
+        id: userData.id,
+        email: userData.email
+      });
   
-      console.log('User logged in successfully');
     } catch (error) {
-      console.error('Login error in context:', error);
+      Sentry.captureException(error, {
+        tags: {
+          location: 'auth_login',
+          errorType: error instanceof Error ? error.name : 'unknown'
+        },
+        extra: {
+          hasUserData: !!userData,
+          hasToken: !!token
+        }
+      });
       setIsAuthenticated(false);
     }
   };
@@ -71,8 +96,16 @@ export const AuthProvider = ({ children }) => {
       // Remove items from AsyncStorage
       await AsyncStorage.removeItem('user');
       await AsyncStorage.removeItem('token');
+
+      // Clear user from Sentry
+      Sentry.setUser(null);
     } catch (error) {
-      console.error('Logout error in context:', error);
+      Sentry.captureException(error, {
+        tags: {
+          location: 'auth_logout',
+          errorType: error instanceof Error ? error.name : 'unknown'
+        }
+      });
     }
   };
 

@@ -7,7 +7,7 @@ import { AuthContext } from '../app/contexts/AuthContext.js';
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
-  const { isAuthenticated, loading, user } = useContext(AuthContext);
+  const { isAuthenticated, loading } = useContext(AuthContext);
 
   const styles = StyleSheet.create({
     container: {

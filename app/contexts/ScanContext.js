@@ -20,6 +20,12 @@ export const ScanProvider = ({ children }) => {
 
     // Validate inputs
     if (!user) {
+        Sentry.captureException(authError, {
+          tags: {
+            location: 'scan_save',
+            errorType: 'auth_required'
+          }
+        });
         setError({
             message: 'Authentication Required',
             details: 'Please log in to save scanned items'
@@ -29,6 +35,16 @@ export const ScanProvider = ({ children }) => {
     }
 
     if (!code || !data) {
+      Sentry.captureException(validationError, {
+        tags: {
+          location: 'scan_save',
+          errorType: 'validation_error'
+        },
+        extra: {
+          hasCode: !!code,
+          hasData: !!data
+        }
+      });
         setError({
             message: 'Invalid Scan',
             details: 'Barcode or product data is missing'
@@ -64,7 +80,16 @@ export const ScanProvider = ({ children }) => {
                 );
                 expertInfo = analysisResponse.data.analysis;
             } catch (llmError) {
-                console.error('Error fetching LLM analysis:', llmError);
+              Sentry.captureException(llmError, {
+                tags: {
+                  location: 'llm_analysis',
+                  errorType: llmError instanceof Error ? llmError.name : 'unknown'
+                },
+                extra: {
+                  productName: data.product.product_name,
+                  userId: user?.id
+                }
+              });
             }
         }
 
@@ -82,12 +107,25 @@ export const ScanProvider = ({ children }) => {
         });
     } catch (error) {
         const errorMessage = error.response?.data?.error || 'Failed to save scan history';
+
+        Sentry.captureException(error, {
+          tags: {
+            location: 'scan_save',
+            errorType: error instanceof Error ? error.name : 'unknown'
+          },
+          extra: {
+            barcode: code,
+            userId: sentryUser?.id,
+            errorMessage,
+            responseStatus: error.response?.status
+          }
+        });
+
         setError({
             message: 'Scan Save Error',
             details: errorMessage,
             fullError: error
         });
-        console.error('Scan save error:', error);
     } finally {
         setIsLoading(false);
     }

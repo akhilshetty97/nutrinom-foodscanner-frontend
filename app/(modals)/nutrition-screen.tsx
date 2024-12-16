@@ -7,9 +7,9 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import axios from 'axios';
+import { AuthContext } from '../../app/contexts/AuthContext.js';
+import * as Sentry from '@sentry/react-native';
 
-const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 interface FoodData {
   product: {
@@ -43,6 +43,7 @@ const NutritionScreen: React.FC = () => {
   const { foodData, expertData, clearScannedItem, isLoading} = useContext(ScanContext);
   const router = useRouter();
   const params = useLocalSearchParams();
+  const { user } = useContext(AuthContext);
 
   // Check for error from previous screen
   const errorMessage = params.error as string | undefined;
@@ -61,6 +62,17 @@ const NutritionScreen: React.FC = () => {
 
   // If there's an error, render error view
   if (errorMessage || !foodData || !foodData.product) {
+    Sentry.addBreadcrumb({
+      category: 'product_view',
+      message: 'No product data available',
+      level: 'info',
+      data: {
+        hasFoodData: !!foodData,
+        hasProduct: !!foodData?.product,
+        userId: user?.id
+      }
+    });
+
     return (
       <View style={[styles.container, styles.centerContent]}>
         <MaterialCommunityIcons 

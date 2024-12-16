@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { ScanContext } from '../contexts/ScanContext.js';
+import * as Sentry from '@sentry/react-native';
 
 // Screen dimensions for scan
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -64,15 +65,20 @@ const Scan = () => {
         
         // Directly open settings in this case
         if (newPermission === 'denied') {
+          Sentry.addBreadcrumb({
+            category: 'camera',
+            message: 'Camera permission denied by user',
+            level: 'warning'
+          });
           Linking.openSettings();
         }
       } catch (error) {
-        console.error('Permission request error:', error);
-        Alert.alert(
-          'Permission Error', 
-          'Could not request camera permission. Please allow permission manually in device settings.',
-          [{ text: 'OK' }]
-        );
+        Sentry.captureException(error, {
+          tags: {
+            location: 'camera_permission',
+            errorType: error instanceof Error ? error.name : 'unknown'
+          }
+        });
       }
     };
   
@@ -88,35 +94,52 @@ const Scan = () => {
             // Navigate to NutritionScreen with the scanned food data
             router.push('../(modals)/nutrition-screen');
           } else {
-            console.warn("Unexpected status code:", response.status);
+            Sentry.captureMessage(`Unexpected API status: ${response.status}`, {
+              level: 'error',
+              tags: { feature: 'barcode_scan' },
+              extra: { 
+                statusCode: response.status,
+                scannedCode 
+              }
+            });
             // Optionally add error handling for non-200 status
             throw new Error(`Unexpected status code: ${response.status}`);
           }
         } catch (error) {
-          // More comprehensive error handling
-          if (axios.isAxiosError(error)) {
-            // Check for specific error scenarios
-            if (error.response?.status === 404) {
-              // Product not found in database
-              router.push('../(modals)/nutrition-screen');
-            } else if (error.response?.status === 500) {
-              // Server error
+            if (axios.isAxiosError(error)) {
+              Sentry.captureException(error, {
+                tags: {
+                  location: 'barcode_scan',
+                  errorType: 'network',
+                  statusCode: error.response?.status?.toString()
+                },
+                extra: {
+                  scannedCode,
+                  responseData: error.response?.data
+                }
+              });
               router.push('../(modals)/nutrition-screen');
             } else {
-              // Generic network or request error
+              Sentry.captureException(error, {
+                tags: {
+                  location: 'barcode_scan',
+                  errorType: 'unknown'
+                },
+                extra: { scannedCode }
+              });
               router.push('../(modals)/nutrition-screen');
             }
-          } else {
-            // Non-Axios error
-          router.push( '../(modals)/nutrition-screen');
           }
-        }
       };
       fetchData()
     }
   }, [scannedCode]);
 
   if (!device){
+    Sentry.captureMessage('Camera device unavailable', {
+      level: 'warning',
+      tags: { feature: 'camera_device' }
+    });
     return <View className='flex-1 bg-white flex items-center justify-center'><Text>Camera is unavailable</Text></View>
   }
 
