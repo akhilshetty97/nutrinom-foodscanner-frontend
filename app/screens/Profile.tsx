@@ -141,13 +141,13 @@ const ProfileScreen = () => {
               <FontAwesome name="linkedin-square" size={24} color="black" />
               <Text style={styles.socialLinkText}>LinkedIn</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            {/* <TouchableOpacity 
               onPress={() => openSocialLink('github')}
               style={styles.socialLink}
             >
               <AntDesign name="github" size={24} color="black" />
               <Text style={styles.socialLinkText}>GitHub</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </View>
