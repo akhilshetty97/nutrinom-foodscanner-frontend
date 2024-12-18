@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Platform, StatusBar, SafeAreaView, ImageBackground, StyleSheet, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, StatusBar, SafeAreaView, ImageBackground, StyleSheet, Linking, Alert, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as Sentry from '@sentry/react-native';
 
@@ -55,9 +54,10 @@ const foodFacts = [
 ];
 
 const ProfileScreen = () => {
-  const { logout } = useContext(AuthContext);
+  const { logout, deleteAccount } = useContext(AuthContext);
   const [randomFact, setRandomFact] = useState("");
   const { user } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     // Pick a random fact when the component mounts
@@ -65,25 +65,85 @@ const ProfileScreen = () => {
     setRandomFact(fact);
   }, []);
 
+  if (!user) return null;
+
   const handleLogout = async () => {
-    try {
-      Sentry.addBreadcrumb({
-        category: 'auth',
-        message: 'User initiated logout',
-        level: 'info'
-      });
-      await logout();
-    } catch (error) {
-      Sentry.captureException(error, {
-        tags: {
-          location: 'profile_logout',
-          errorType: error instanceof Error ? error.name : 'unknown'
+    Alert.alert(
+      "Confirm Logout",
+      "Are you sure you want to log out?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
         },
-        extra: {
-          userId: user?.id
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setIsLoading(true);
+              Sentry.addBreadcrumb({
+                category: 'auth',
+                message: 'User initiated logout',
+                level: 'info'
+              });
+              await logout();
+            } catch (error) {
+              Sentry.captureException(error, {
+                tags: {
+                  location: 'profile_logout',
+                  errorType: error instanceof Error ? error.name : 'unknown'
+                },
+                extra: {
+                  userId: user?.id
+                }
+              });
+            } finally {
+              setIsLoading(false);
+            }
+          }
         }
-      });
-    }
+      ]
+    );
+  };
+  
+  const handleDelete = async () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to delete your account? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setIsLoading(true);
+              await deleteAccount(); // This will handle the logout process internally
+            } catch (error) {
+              Sentry.captureException(error, {
+                tags: {
+                  location: 'profile_delete',
+                  errorType: error instanceof Error ? error.name : 'unknown'
+                },
+                extra: {
+                  userId: user?.id
+                }
+              });
+              Alert.alert(
+                "Error",
+                "Failed to delete account. Please try again later."
+              );
+            } finally {
+              setIsLoading(false);
+            }
+          }
+        }
+      ]
+    );
   };
 
   const openSocialLink = (platform:string) => {
@@ -126,9 +186,14 @@ const ProfileScreen = () => {
         alignItems: 'center'
       }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Profile</Text>
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-          <Text style={styles.logoutButtonText}>Logout</Text>
-        </TouchableOpacity>
+        <View className='flex-row gap-3'>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton} disabled={isLoading}>
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDelete} style={styles.deleteButton} disabled={isLoading}>
+            <Text style={styles.logoutButtonText}>Delete</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.container}>
@@ -159,20 +224,20 @@ const ProfileScreen = () => {
             <TouchableOpacity 
               onPress={() => openSocialLink('linkedin')}
               style={styles.socialLink}
+              disabled={isLoading}
             >
               <FontAwesome name="linkedin-square" size={24} color="black" />
               <Text style={styles.socialLinkText}>LinkedIn</Text>
             </TouchableOpacity>
-            {/* <TouchableOpacity 
-              onPress={() => openSocialLink('github')}
-              style={styles.socialLink}
-            >
-              <AntDesign name="github" size={24} color="black" />
-              <Text style={styles.socialLinkText}>GitHub</Text>
-            </TouchableOpacity> */}
           </View>
         </View>
       </View>
+        {/* Loading Overlay */}
+        {isLoading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#ffffff" />
+          </View>
+        )}
     </SafeAreaView>
   );
 };
@@ -202,6 +267,12 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     backgroundColor: '#202020',
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 5,
+  },
+  deleteButton:{
+    backgroundColor: '#FF5C5C',
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 5,
@@ -256,6 +327,17 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: '600',
   },
+  loadingOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 999,
+  }
 });
 
 export default ProfileScreen;

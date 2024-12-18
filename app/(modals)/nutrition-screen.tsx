@@ -119,7 +119,7 @@ const NutritionScreen: React.FC = () => {
       </View>
 
       {/* Nutritional Information Section */}
-      {product.nutriscore_grade !== "not-applicable" && (
+      {!product.no_nutrition_data && (
         <View style={styles.sectionContainer}>
           <View style={styles.headerIcons}>
             <MaterialCommunityIcons name="nutrition" size={24} color="black" />

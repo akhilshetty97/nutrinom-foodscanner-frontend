@@ -4,16 +4,8 @@ import {useCameraPermission, Camera, useCameraDevice, useCodeScanner} from "reac
 import { useIsFocused } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 import { ScanContext } from '../contexts/ScanContext.js';
 import * as Sentry from '@sentry/react-native';
-
-// Screen dimensions for scan
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCREEN_HEIGHT = Dimensions.get('window').height;
-const SCAN_AREA_WIDTH = SCREEN_WIDTH * 0.8;
-const SCAN_AREA_HEIGHT = SCREEN_HEIGHT * 0.15;
-
 
 const Scan = () => {
 
@@ -21,10 +13,8 @@ const Scan = () => {
   const device = useCameraDevice('back');
   const isFocused = useIsFocused();
   const router = useRouter(); 
-  // const [scannedCode, setScannedCode] = useState<string|null>(null);
   const scannerEnabled = useRef(true); 
-  // const [foodData, setFoodData] = useState<Record<string, any> | null>(null);
-  const { scannedCode, setScannedCode,foodData,setFoodData, saveScannedItem, clearScannedItem } = useContext(ScanContext);
+  const { scannedCode, setScannedCode, saveScannedItem } = useContext(ScanContext);
   const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
   // Method Reset the scanner
@@ -76,6 +66,7 @@ const Scan = () => {
             [
               {
                 text: 'Not Now',
+                style: "cancel"
               },
               {
                 text: 'Open Settings',

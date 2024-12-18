@@ -1,8 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Sentry from '@sentry/react-native';
+import axios from 'axios';
 
 export const AuthContext = createContext();
+const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -110,8 +112,41 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const deleteAccount = async () => {
+    try {
+      // First attempt to delete from backend
+      const response = await axios.delete(`${BACKEND_URL}/delete-account`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      Sentry.addBreadcrumb({
+        category: 'auth',
+        message: 'Account successfully deleted',
+        level: 'info'
+      });
+
+      // Call logout after successful deletion
+      await logout();
+      
+    } catch (error) {
+      Sentry.captureException(error, {
+        tags: {
+          location: 'auth_delete',
+          errorType: error instanceof Error ? error.name : 'unknown'
+        },
+        extra: {
+          userId: user?.id,
+          responseData: error.response?.data,
+          statusCode: error.response?.status
+        }
+      });
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, setIsAuthenticated, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, setIsAuthenticated, login, logout, deleteAccount,loading }}>
       {children}
     </AuthContext.Provider>
   );
