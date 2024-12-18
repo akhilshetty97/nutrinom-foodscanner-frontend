@@ -2,6 +2,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useEffect, useContext } from 'react'
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext.js';
 import * as Sentry from '@sentry/react-native';
@@ -85,16 +86,25 @@ const Login = () => {
     }}
     resizeMode='cover'
   />
-    <View className='flex items-center justify-between top-[38%]'>
+    <View className='flex items-center justify-between top-[35%]'>
     <View className='items-center'>
         <Image className='w-20 h-20 mb-5' source={require('./../../assets/images/icon.png')}/>
         <Text className='text-white font-bold text-5xl'>NutriNom</Text>
         <Text className='text-white font-medium text-3xl mt-3'>Scan • Learn • Nom</Text>
     </View>
-    <TouchableOpacity className='flex flex-row items-center gap-5 bg-white rounded-xl mt-20 p-3 px-5' onPress={() => handleSignInPress()}>
-        <Image className='w-8 h-8' source={require('./../../assets/images/google.png')}/>
-        <Text className='text-lg font-medium'>Sign In with Google</Text>
-    </TouchableOpacity>
+    <View className='flex items-center mt-10'>
+      <TouchableOpacity className='flex flex-row items-center gap-2 bg-white rounded-xl' style={{ paddingVertical: 13, paddingHorizontal:19 }} onPress={() => handleSignInPress()}>
+          <Image className='w-5 h-5' source={require('./../../assets/images/google.png')}/>
+          <Text style={{ fontSize: 18}} className='font-medium'>Sign in with Google</Text>
+      </TouchableOpacity>
+      <AppleAuthentication.AppleAuthenticationButton
+        buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+        buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE}
+        cornerRadius={10}
+        style={styles.appleButton}
+        onPress={ () => console.log('Apple sign in') }
+        />
+    </View>
   </View>
   </View>
   )
@@ -108,6 +118,11 @@ const styles = StyleSheet.create({
       bottom: 0,
       right: 0,
       opacity:0.5
+    },
+    appleButton:{
+      width:220,
+      height:49,
+      marginTop:12
     }
   });
 
