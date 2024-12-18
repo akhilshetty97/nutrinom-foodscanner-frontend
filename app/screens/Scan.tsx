@@ -70,7 +70,19 @@ const Scan = () => {
             message: 'Camera permission denied by user',
             level: 'warning'
           });
-          Linking.openSettings();
+          Alert.alert(
+            'Camera Access Required',
+            'This feature requires camera access. Would you like to enable it in Settings?',
+            [
+              {
+                text: 'Not Now',
+              },
+              {
+                text: 'Open Settings',
+                onPress: () => Linking.openSettings()
+              }
+            ]
+          );
         }
       } catch (error) {
         Sentry.captureException(error, {
@@ -156,15 +168,15 @@ const Scan = () => {
         }}
       >
         <View style={styles.permissionContainer}>
-          <Text style={styles.permissionTitle}>Camera Permission Required</Text>
+          <Text style={styles.permissionTitle}>Camera Access</Text>
           <Text style={styles.permissionSubtitle}>
-            We need camera access to scan barcodes and provide you with product information
+            To scan barcodes and show product information, this app needs to access your camera.
           </Text>
           <TouchableOpacity 
             style={styles.permissionButton}
             onPress={handleRequestPermission}
           >
-            <Text style={styles.permissionButtonText}>Grant Permission</Text>
+            <Text style={styles.permissionButtonText}>Continue</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>

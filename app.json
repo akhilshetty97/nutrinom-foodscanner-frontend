@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.FoodScanner"
+      "bundleIdentifier": "com.anonymous.FoodScanner",
+      "infoPlist": {
+       "NSCameraUsageDescription": "We use your camera to scan product barcodes to show you detailed nutritional facts like calories, ingredients, allergens, and dietary analysis of the products you've scanned."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -52,6 +55,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "72c80c2f-aca9-4d2a-93f5-f66f5412e9b9"
+      }
     }
   }
 }
