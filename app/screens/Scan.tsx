@@ -5,6 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { ScanContext } from '../contexts/ScanContext.js';
+import ScanOverlay from '../../components/ScanOverlay';
 import * as Sentry from '@sentry/react-native';
 
 const Scan = () => {
@@ -190,17 +191,7 @@ const Scan = () => {
       />
       
       {/* Overlay with scan area */}
-      <View style={StyleSheet.absoluteFill}>
-        <View style={styles.overlayTop} />
-        <View style={styles.centerRow}>
-          <View style={styles.overlaySide} />
-          <View style={styles.scanArea} />
-          <View style={styles.overlaySide} />
-        </View>
-        <View style={styles.overlayBottom}>
-          <Text style={styles.scanText}>Align barcode within frame</Text>
-        </View>
-      </View>
+      <ScanOverlay/>
   
       {scannedCode && (
         <View style={styles.scannedCodeContainer}>
@@ -259,38 +250,6 @@ const styles = StyleSheet.create({
       color: 'white',
       fontWeight: 'bold',
       fontSize: 16,
-    },
-    overlayTop: {
-      height: '35%',  // Matches regionOfInterest y value
-      backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    centerRow: {
-      flexDirection: 'row',
-      height: '30%',  // Matches regionOfInterest height
-    },
-    overlaySide: {
-      width: '10%',  // Matches regionOfInterest x value
-      backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    overlayBottom: {
-      height: '35%',
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      alignItems: 'center',
-      paddingTop: 20,
-    },
-    scanArea: {
-      width: '80%',  // Matches regionOfInterest width
-      height: '100%',
-      borderColor: '#fff',
-      borderWidth: 2,
-    },
-    scanText: {
-      color: '#fff',
-      fontSize: 16,
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      padding: 8,
-      borderRadius: 4,
-      overflow: 'hidden',
     }
   });
 
