@@ -12,15 +12,14 @@ const History = () => {
   const { user } = useContext(AuthContext);
   const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-  // Function to fetch product list
-  const fetchProductList = async () => {
+  // Memoize fetch function
+  const fetchProductList = useCallback(async () => {
+    if (!user?.id) return;
+
     try {
       setIsLoading(true);
       const response = await axios.get(`${BACKEND_URL}/product/history/${user.id}`);
-
-      if (response.data.scannedProducts) {
-        setProductList(response.data.scannedProducts);
-      }
+      setProductList(response.data.scannedProducts || []);
     } catch(error) {
       Sentry.captureException(error, {
         tags: {
@@ -35,7 +34,7 @@ const History = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [user?.id, BACKEND_URL]);
 
   // Use focus effect to refetch when screen comes into focus
   useFocusEffect(

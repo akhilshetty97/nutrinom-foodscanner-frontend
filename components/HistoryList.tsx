@@ -1,4 +1,4 @@
-import React, { useState,useContext, useEffect } from 'react'
+import React, { useState,useContext, useEffect, useCallback } from 'react'
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import axios from 'axios';
@@ -27,7 +27,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
   const router = useRouter(); 
 
   // Function to handle product details fetch
-  const handleProductPress = async (productId: number) => {
+  const handleProductPress = useCallback(async (productId: number) => {
     try {
       setIsHistoryLoading(true);
       setLoadingProductId(productId);
@@ -73,11 +73,11 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
       setIsHistoryLoading(false);
       setLoadingProductId(null);
     }
-  };
+  },[historyLoading,foodData,user?.id]);
 
 
   // Render individual product item
-  const renderProductItem = ({ item }: { item: NonNullable<HistoryListProps['productList']>[0] }) => (
+  const renderProductItem = useCallback(({ item }: { item: NonNullable<HistoryListProps['productList']>[0] }) => (
     <View style={[
       styles.itemContainer, 
       historyLoading && { opacity: 0.8 }  // Add opacity when loading
@@ -109,7 +109,7 @@ const HistoryList: React.FC<HistoryListProps> = ({ productList }) => {
         <MaterialIcons name="navigate-next" size={24} color="black" />
       </TouchableOpacity>
     </View>
-  );
+  ),[historyLoading, handleProductPress]);
 
   // If no products, show a message
   if (!productList || productList.length === 0) {
