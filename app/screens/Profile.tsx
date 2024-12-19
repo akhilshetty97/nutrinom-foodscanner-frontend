@@ -209,7 +209,7 @@ const ProfileScreen = () => {
         {/* Thank You Note */}
         <View style={styles.thankYouContainer}>
           <Text style={styles.thankYouTitle}>
-          Thank You, {user.given_name},
+          Thank You{user.given_name !== 'Apple User' ? `, ${user.given_name}` : ''},
           </Text>
           <Text style={styles.thankYouTitle}>
             for Exploring My App!
