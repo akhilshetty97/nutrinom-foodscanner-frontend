@@ -1,11 +1,11 @@
 // components/profile/HeaderSection.js
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 
 const ProfileHeader = React.memo(({ onLogout, onDelete, isLoading }) => (
   <View style={styles.header}>
     <Text style={styles.headerTitle}>Profile</Text>
-    <View className='flex-row gap-3'>
+    <View className={`flex-row ${Platform.isPad ? 'gap-8' : 'gap-3'}`}>
       <TouchableOpacity onPress={onLogout} style={styles.logoutButton} disabled={isLoading}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>

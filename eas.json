@@ -15,7 +15,7 @@
       "autoIncrement": true,
       "env":{
         "EXPO_PUBLIC_ENV" : "development",
-        "EXPO_PUBLIC_BACKEND_URL":"http://10.5.1.88:3000",
+        "EXPO_PUBLIC_BACKEND_URL":"https://nutrinomapp.xyz",
         "EXPO_PUBLIC_IOS_CLIENT_ID" : "145316921728-rh0ttpefq7r5ot5ou62ue2ivrpbhg0ma.apps.googleusercontent.com",
         "EXPO_PUBLIC_SENTRY_DSN" : "https://1b45c08e1894c82b166ba706b546947f@o4508478908071936.ingest.us.sentry.io/4508478910234624",
         "EXPO_PUBLIC_APP_VERSION" : "1.0.0",
