@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Dimensions } from 'react-native'
 import React, { useEffect, useContext, useState } from 'react'
 import * as Google from 'expo-auth-session/providers/google';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,6 +9,10 @@ import * as Sentry from '@sentry/react-native';
 
 const IOS_CLIENT_ID = process.env.EXPO_PUBLIC_IOS_CLIENT_ID;
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+// Get the device width
+const { width } = Dimensions.get('window');
+// Define a breakpoint for iPad (you can adjust this value)
+const IPAD_BREAKPOINT = 768;
 
 const Login = () => {
   const { login, setIsAuthenticated } = useContext(AuthContext);
@@ -196,7 +200,7 @@ const styles = StyleSheet.create({
       left: 0,
       bottom: 0,
       right: 0,
-      opacity:0.5
+      opacity: width >= IPAD_BREAKPOINT ? 1 : 0.8
     },
     appleButton:{
       width:220,
