@@ -32,7 +32,7 @@ const Scan = () => {
   }, [isFocused]);
 
   const codeScanner = useCodeScanner({
-    codeTypes: ['ean-13', 'upc-a', 'itf'],
+    codeTypes: ['ean-13', 'upc-a', 'itf', 'ean-8','upc-e'],
     regionOfInterest:{
       x: 0.1,     // 10% from left (making it wider)
       y: 0.35,    // 35% from top

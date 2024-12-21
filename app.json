@@ -16,7 +16,7 @@
       "supportsTablet": true,
       "usesAppleSignIn": true,
       "bundleIdentifier": "com.anonymous.FoodScanner",
-      "buildNumber": "8",
+      "buildNumber": "9",
       "infoPlist": {
        "NSCameraUsageDescription": "We use your camera to scan product barcodes to show you detailed nutritional facts like calories, ingredients, allergens, and dietary analysis of the products you've scanned.",
        "NSLocationWhenInUseUsageDescription": "This app does not use your location. This permission is included due to a third-party dependency - Sentry"
