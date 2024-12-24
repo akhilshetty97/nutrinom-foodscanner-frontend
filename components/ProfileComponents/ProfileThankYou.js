@@ -6,20 +6,20 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 const ProfileThankYou = React.memo(({ welcomeText, onSocialLink, isLoading }) => (
   <View style={styles.container}>
     <Text style={styles.title}>{welcomeText}</Text>
-    <Text style={styles.title}>for Exploring My App!</Text>
+    <Text style={styles.title}>for exploring NutriNom!</Text>
     <Text style={styles.text}>
-      I built this app as a personal project, and your use of it makes it all worthwhile. I'm passionate about 
-      continuously improving it, and your feedback would mean so much to me. Stay Tuned for exciting new features!
-    </Text>
-    
+    I built this app as a personal project, and I'm passionate about 
+    continuously improving it with your feedback.
+  </Text>
+
     <View style={styles.socialLinksContainer}>
       <TouchableOpacity 
         onPress={onSocialLink}
         style={styles.socialLink}
         disabled={isLoading}
       >
-        <FontAwesome name="linkedin-square" size={24} color="black" />
-        <Text style={styles.socialLinkText}>LinkedIn</Text>
+        <Text style={styles.socialLinkText}>Let's connect & chat on</Text>
+        <FontAwesome name="linkedin-square" size={24} color="#0A66C2" />
       </TouchableOpacity>
     </View>
   </View>
@@ -29,19 +29,20 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginBottom: 25
+    marginBottom: 45
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 2,
     color: '#333',
   },
   text: {
     fontSize: 16,
     textAlign: 'center',
     color: '#666',
-    marginBottom: 20,
+    marginTop: 6,
+    marginBottom: 10,
     lineHeight: 24,
   },
   socialLinksContainer: {
@@ -51,14 +52,14 @@ const styles = StyleSheet.create({
   },
   socialLink: {
     backgroundColor: '#ffffff',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    padding:10,
+    paddingHorizontal:15,
     borderRadius: 10,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    gap: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
   },
   socialLinkText: {
+    fontSize:16,
     color: 'black',
     fontWeight: '600',
   }

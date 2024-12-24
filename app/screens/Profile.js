@@ -120,7 +120,7 @@ const ProfileScreen = () => {
 
   // Memoize the welcome text
   const welcomeText = useMemo(() => {
-    return `Thank You${user?.given_name !== 'Apple User' ? `, ${user?.given_name}` : ''}`;
+    return `Thank you${user?.given_name !== 'Apple User' ? `, ${user?.given_name}` : ''}`;
   }, [user?.given_name]);
 
   if (!user) return null;

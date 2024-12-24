@@ -15,13 +15,13 @@ const Scan = () => {
   const isFocused = useIsFocused();
   const router = useRouter(); 
   const scannerEnabled = useRef(true); 
-  const { scannedCode, setScannedCode, saveScannedItem } = useContext(ScanContext);
+  const { scannedCode, setScannedCode, saveScannedItem, clearScannedItem } = useContext(ScanContext);
   const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
   // Method Reset the scanner
   const resetScanner = () => {
+    clearScannedItem();
     scannerEnabled.current = true;
-    setScannedCode(null);
   };
 
   // Listen for focus changes to reset scanner(eg when modal is pushed down)

@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
     marginBottom: -15
   },
   text: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
     textAlign: 'center',
     color: '#fff',
-    paddingHorizontal: 60,
+    paddingHorizontal: 70,
     marginBottom: 35
   }
 });
