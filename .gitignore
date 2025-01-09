@@ -24,3 +24,4 @@ ios/
 
 env.d.ts
 .env.local
+eas.json
