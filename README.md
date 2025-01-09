@@ -2,7 +2,7 @@
 
 NutriNom is a full stack mobile application that enables users to scan food products and receive detailed nutritional information along with AI-powered insights. This repository contains the frontend codebase of the application.
 
-![App Store Badge](https://img.shields.io/badge/App_Store-Download-blue.svg)
+![App Store Badge](https://apps.apple.com/us/app/nutrinom/id6739545306)
 
 ## Features
 
