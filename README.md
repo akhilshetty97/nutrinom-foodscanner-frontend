@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# NutriNom - Smart Food Scanner Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+NutriNom is a full stack mobile application that enables users to scan food products and receive detailed nutritional information along with AI-powered insights. This repository contains the frontend codebase of the application.
 
-## Get started
+![App Store Badge](https://img.shields.io/badge/App_Store-Download-blue.svg)
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- **Barcode Scanning**: Utilizes device camera for quick product identification
+- **Real-time Nutritional Analysis**: Displays comprehensive nutritional information
+- **AI-Powered Insights**: Integrates GPT-4 mini for intelligent food analysis
+- **User Authentication**: Secure sign-in using Google OAuth
+- **Scan History**: Personalized tracking of scanned products
+- **Product Details**: Comprehensive information including:
+  - Nutri-Score ratings
+  - Eco-Score information
+  - Complete ingredient lists
+  - Country of origin
+  - Packaging information
+  - NOVA group classifications
 
-2. Start the app
+## Tech Stack
 
-   ```bash
-    npx expo start
-   ```
+- **Core Framework**: React Native
+- **Language**: TypeScript
+- **State Management**: React Context API
+- **Authentication**: Google OAuth, JWT
+- **API Integration**: RESTful APIs
+- **Backend Services**: Express.js, Supabase
+- **Cloud Infrastructure**: AWS (EC2, Route 53)
 
-In the output, you'll find options to open the app in a
+## Prerequisites
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Node.js (v16 or higher)
+- npm or yarn
+- React Native CLI
+- Xcode (for iOS development)
+- Android Studio (for Android development)
+- Google OAuth credentials
+- AWS account (for deployment)
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Project Structure
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+src/
+├── components/         # Reusable UI components
+├── screens/           # Screen components
+├── navigation/        # Navigation configuration
+├── services/         # API and third-party service integrations
+├── context/          # React Context for state management
+├── utils/            # Helper functions and utilities
+├── hooks/            # Custom React hooks
+├── types/            # TypeScript type definitions
+└── assets/           # Images, fonts, and other static assets
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Key Components
 
-## Learn more
+### Scanner
+- Camera integration for barcode scanning
+- Real-time product detection
+- Error handling for invalid or unrecognized barcodes
 
-To learn more about developing your project with Expo, look at the following resources:
+### Authentication
+- Google OAuth implementation
+- JWT token management
+- Secure session handling
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Product Analysis
+- Integration with GPT-4 mini for nutritional insights
+- Data processing and formatting
+- Caching mechanism for frequent requests
 
-## Join the community
+## Contact
 
-Join our community of developers creating universal apps.
+For any queries or support, please reach out to akhilshetty2406@gmail.com
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Download
+
+[![Download on the App Store](https://img.shields.io/badge/Download_on_the-App_Store-black.svg?style=for-the-badge)](https://apps.apple.com/us/app/nutrinom/id6739545306)
